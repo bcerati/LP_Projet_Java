@@ -1,7 +1,7 @@
 package admin.controllers;
 
-import metier.Question;
-import metier.Reponse;
+import models.metier.Question;
+import models.metier.Reponse;
 
 import java.util.Vector;
 

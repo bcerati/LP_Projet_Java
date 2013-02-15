@@ -92,19 +92,15 @@ public class AdminView extends JFrame implements AdminObservable {
 		btnAddQuestion = new Button("addQuestion.png", 190, 34);
 		
 		btnEditQuestion = new Button("editQuestion.png", 201, 34);
-		btnEditQuestion.setVisible(false);
 		
 		btnDeleteQuestion = new Button("deleteQuestion.png", 216, 34);
-		btnDeleteQuestion.setVisible(false);
 		
 		btnAddResponse = new Button("addResponse.png", 205, 34);
 		btnAddResponse.setVisible(false);
 		
 		btnEditResponse = new Button("editResponse.png", 198, 34);
-		btnEditResponse.setVisible(false);
 		
 		btnDeleteResponse = new Button("deleteResponse.png", 213, 34);
-		btnDeleteResponse.setVisible(false);
 		
 		right.add(btnAddQuestion);
 		right.add(btnEditQuestion);
