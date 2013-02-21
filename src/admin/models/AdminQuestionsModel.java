@@ -1,26 +1,25 @@
 package admin.models;
 
 import models.metier.Question;
-import models.metier.Reponse;
 
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-public class AdminReponseModel extends AbstractTableModel{
+public class AdminQuestionsModel extends AbstractTableModel{
 
-	private final String[] COLONNES = {"Intitulé de la réponse", "Juste"};
-	private Vector<Reponse> data;
+	private final String[] COLONNES = {"Intitulé de la question", "Niveau"};
+	private Vector<Question> data;
 
-	public AdminReponseModel() {
-		data = new Vector<Reponse>();
+	public AdminQuestionsModel() {
+		data = new Vector<Question>();
 	}
 
-	public Vector<Reponse> getData() {
+	public Vector<Question> getData() {
 		return data;
 	}
 
-	public void setData(Vector<Reponse> data) {
+	public void setData(Vector<Question> data) {
 		this.data = data;
 		this.fireTableDataChanged();
 	}
@@ -40,17 +39,17 @@ public class AdminReponseModel extends AbstractTableModel{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Reponse r = this.data.get(rowIndex);
+		Question q = this.data.get(rowIndex);
 
 		Object o = null;
 		
 		switch (columnIndex) {
 		case 0:
-			o = r.getIntitule();
-		break;
+			o = q.getIntitule();
+			break;
 		case 1:
-			o = (r.isJuste()) ? "OUI" : "NON";
-		break;
+			o = q.getNiveau();
+			break;
 		}
 
 		return o;

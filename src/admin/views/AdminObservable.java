@@ -1,10 +1,10 @@
 package admin.views;
 
-import admin.models.AdminQuestionModel;
-import admin.models.AdminReponseModel;
+import admin.models.AdminQuestionsModel;
+import admin.models.AdminResponsesModel;
 
 public interface AdminObservable {
 
-	public void fillQuestion(AdminQuestionModel model);
-	public void fillReponse(AdminReponseModel model);
+	public void fillQuestions(AdminQuestionsModel model);
+	public void fillResponses(AdminResponsesModel model);
 }

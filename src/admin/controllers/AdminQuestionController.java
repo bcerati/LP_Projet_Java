@@ -1,7 +1,5 @@
 package admin.controllers;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -12,58 +10,58 @@ import models.dao.QuestionDAO;
 import models.dao.ReponseDAO;
 import models.metier.Question;
 
-import admin.models.AdminQuestionModel;
-import admin.models.AdminReponseModel;
-import admin.views.AdminObservable;
+import admin.models.AdminQuestionsModel;
+import admin.models.AdminResponsesModel;
 import admin.views.AdminView;
 
 public class AdminQuestionController implements ItemListener, MouseListener {
 
 	private AdminView view;
-	private AdminQuestionModel model;
-	private AdminReponseModel modelRep;
+	private AdminQuestionsModel questionsModel;
+	private AdminResponsesModel responsesModel;
 	private int niveau_regarde;
 
 	public AdminQuestionController(AdminView v) {
 		view = v;
-		niveau_regarde = -1;
+		niveau_regarde = 1;
 	}
 
 	/*
 	 * Récupération des questions + remplissage de la JTable
 	 */
 	public void fillQuestionsTable() {
-		this.model = new AdminQuestionModel();
+		this.questionsModel = new AdminQuestionsModel();
 
-		if(niveau_regarde == -1)
-			niveau_regarde = 1;
+		view.fillQuestions(questionsModel);
+		questionsModel.setData(QuestionDAO.getInstance().findALlByNiveau(niveau_regarde));
+		questionsModel.fireTableDataChanged();
 
-		view.fillQuestion(model);
-		model.setData(QuestionDAO.getInstance().findALlByNiveau(niveau_regarde));
-		model.fireTableDataChanged();
-
-		if(model.getData() != null && model.getData().size() > 0)
-			fillReponsesTable(model.getData().get(0).getId());
+		if(questionsModel.getData() != null && questionsModel.getData().size() > 0)
+			fillReponsesTable(questionsModel.getData().get(0).getId());
 		else
 			fillReponsesTable(0);
-
+		
+		view.resizeQuestionsTable();
+		view.resizeResponsesTable();
 	}
 
 	/*
 	 * Récupération des questions + remplissage de la JTable
 	 */
 	public void fillReponsesTable(int id_question) {
-		this.modelRep = new AdminReponseModel();
+		this.responsesModel = new AdminResponsesModel();
 
-		view.fillReponse(modelRep);
-		modelRep.setData(ReponseDAO.getInstance().findALlByQuestion(id_question));
-		modelRep.fireTableDataChanged();
+		view.fillResponses(responsesModel);
+		responsesModel.setData(ReponseDAO.getInstance().findALlByQuestion(id_question));
+		responsesModel.fireTableDataChanged();
 	}
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 
-		if(niveau_regarde > 0) {
+			int state = e.getStateChange();
+			
+			if(state == ItemEvent.SELECTED) {
 			Object item = e.getItem();
 			
 			if(item.equals("Facile"))
@@ -73,41 +71,35 @@ public class AdminQuestionController implements ItemListener, MouseListener {
 			else
 				niveau_regarde = 3;
 
+			System.out.println(niveau_regarde);
 			this.fillQuestionsTable();
-		}
+			}
+		
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Vector<Question> q = (((AdminQuestionModel) (view.getQuestionsTable().getModel())).getData());
+		Vector<Question> q = (((AdminQuestionsModel) (view.getQuestionsTable().getModel())).getData());
 		fillReponsesTable(q.get(view.getQuestionsTable().getSelectedRow()).getId());
-		
-		//System.out.println(q.get(view.getQuestionsTable().getSelectedRow()).getReponses().size());
-		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
-
 }

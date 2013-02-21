@@ -15,8 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import admin.controllers.AdminQuestionController;
-import admin.models.AdminQuestionModel;
-import admin.models.AdminReponseModel;
+import admin.models.AdminQuestionsModel;
+import admin.models.AdminResponsesModel;
 import admin.views.AdminObservable;
 
 public class AdminView extends JFrame implements AdminObservable {
@@ -40,7 +40,7 @@ public class AdminView extends JFrame implements AdminObservable {
 		this.controller = new AdminQuestionController(this);
 
 		buildGUI();
-		
+
 		this.controller.fillQuestionsTable();
 
 		this.setSize(1000, 520);
@@ -58,13 +58,13 @@ public class AdminView extends JFrame implements AdminObservable {
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
 
-		JPanel pTop = this.buildTopPanel();
-		pTop.setPreferredSize(new Dimension(1000, 80));
-
 		JPanel pQuestions = this.buildQuestionsPanel();
 
 		JPanel pResponse = this.buildResponsesPanel();
 		pResponse.setPreferredSize(new Dimension(1000, 200));
+
+		JPanel pTop = this.buildTopPanel();
+		pTop.setPreferredSize(new Dimension(1000, 80));
 
 		p.add(pTop);
 		p.add(pQuestions);
@@ -138,17 +138,19 @@ public class AdminView extends JFrame implements AdminObservable {
 	/*
 	 * Mise à la bonne taille du tableau de la liste des questions
 	 */
-	private void resizeQuestionsTable() {
+	public void resizeQuestionsTable() {
 		questionsTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		questionsTable.getColumnModel().getColumn(0).setPreferredWidth(850);
+		questionsTable.getSelectionModel().addSelectionInterval(0, 0);
 	}
 
 	/*
 	 * Mise à la bonne taille du tableau de la liste des réponses
 	 */
-	private void resizeResponsesTable() {
+	public void resizeResponsesTable() {
 		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		responsesTable.getColumnModel().getColumn(0).setPreferredWidth(850);
+		responsesTable.getSelectionModel().addSelectionInterval(0, 0);
 	}
 
 	/*
@@ -185,13 +187,13 @@ public class AdminView extends JFrame implements AdminObservable {
 	}
 
 	@Override
-	public void fillQuestion(AdminQuestionModel model) {
+	public void fillQuestions(AdminQuestionsModel model) {
 		this.questionsTable.setModel(model);
 		this.resizeQuestionsTable();
 	}
 
 	@Override
-	public void fillReponse(AdminReponseModel model) {
+	public void fillResponses(AdminResponsesModel model) {
 		this.responsesTable.setModel(model);
 		this.resizeResponsesTable();
 	}
