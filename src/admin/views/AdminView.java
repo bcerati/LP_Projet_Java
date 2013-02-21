@@ -4,6 +4,8 @@ import general_views.Button;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -48,6 +50,7 @@ public class AdminView extends JFrame implements AdminObservable {
 		resizeQuestionsTable();
 		columnResponsesTable();
 
+		this.setResizable(false);
 		this.setVisible(true);
 	}
 
@@ -64,7 +67,7 @@ public class AdminView extends JFrame implements AdminObservable {
 		pResponse.setPreferredSize(new Dimension(1000, 200));
 
 		JPanel pTop = this.buildTopPanel();
-		pTop.setPreferredSize(new Dimension(1000, 80));
+		pTop.setPreferredSize(new Dimension(1000, 30));
 
 		p.add(pTop);
 		p.add(pQuestions);
@@ -91,28 +94,12 @@ public class AdminView extends JFrame implements AdminObservable {
 		left.add(box);
 		
 		JPanel right = new JPanel();
-		right.setPreferredSize(new Dimension(700, 80));
+		right.setPreferredSize(new Dimension(700, 20));
+		
+		JLabel lbl = new JLabel("Administration des questions/réponses du jeu");
+		lbl.setFont(new Font("Arial", Font.ITALIC, 17));
+		right.add(lbl);
 
-		btnAddQuestion = new Button("addQuestion.png", 190, 34);
-		
-		btnEditQuestion = new Button("editQuestion.png", 201, 34);
-		
-		btnDeleteQuestion = new Button("deleteQuestion.png", 216, 34);
-		
-		btnAddResponse = new Button("addResponse.png", 205, 34);
-		btnAddResponse.setVisible(false);
-		
-		btnEditResponse = new Button("editResponse.png", 198, 34);
-		
-		btnDeleteResponse = new Button("deleteResponse.png", 213, 34);
-		
-		right.add(btnAddQuestion);
-		right.add(btnEditQuestion);
-		right.add(btnDeleteQuestion);
-		right.add(btnAddResponse);
-		right.add(btnEditResponse);
-		right.add(btnDeleteResponse);
-		
 		p.add(left);
 		p.add(right);
 
@@ -130,7 +117,28 @@ public class AdminView extends JFrame implements AdminObservable {
 		questionsTable = new JTable();
 		questionsTable.addMouseListener(controller);
 		JScrollPane scrollPane = new JScrollPane(questionsTable);
+		scrollPane.setPreferredSize(new Dimension(830, 400));
+
+		GridLayout g = new GridLayout(7, 1);
+		g.setVgap(5);
+		JPanel btnQuestions = new JPanel(g);
+		btnQuestions.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
+
+		btnAddQuestion = new Button("addQuestion.png", 190, 34);
+		btnEditQuestion = new Button("editQuestion.png", 201, 34);
+		btnDeleteQuestion = new Button("deleteQuestion.png", 216, 34);
+
+		btnQuestions.add(new JPanel());
+		btnQuestions.add(new JPanel());
+		btnQuestions.add(btnAddQuestion);
+		btnQuestions.add(btnEditQuestion);
+		btnQuestions.add(btnDeleteQuestion);
+		btnQuestions.add(new JPanel());
+		btnQuestions.add(new JPanel());
+
+
 		p.add(scrollPane);
+		p.add(btnQuestions);
 		return p;
 
 	}
@@ -164,8 +172,23 @@ public class AdminView extends JFrame implements AdminObservable {
 		responsesTable = new JTable();
 		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		JScrollPane scrollPane = new JScrollPane(responsesTable);
+		scrollPane.setPreferredSize(new Dimension(830, 190));
+		
+		GridLayout g = new GridLayout(3, 1);
+		g.setVgap(5);
+		JPanel btnResponses = new JPanel(g);
+		btnResponses.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
+
+		btnAddResponse = new Button("addResponse.png", 205, 34);
+		btnEditResponse = new Button("editResponse.png", 198, 34);
+		btnDeleteResponse = new Button("deleteResponse.png", 213, 34);
+
+		btnResponses.add(btnAddResponse);
+		btnResponses.add(btnEditResponse);
+		btnResponses.add(btnDeleteResponse);
 
 		p.add(scrollPane);
+		p.add(btnResponses);
 		return p;
 	}
 
