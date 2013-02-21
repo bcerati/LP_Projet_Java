@@ -61,7 +61,7 @@ public class GameView extends JFrame {
 	
 	public JPanel buildTop() {
 		int caseWidht = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
-		
+
 		// Panel du haut (= bouton quit + jokers + logo + pyramide)
 		JPanel panelTop = new JPanel();
 		panelTop.setLayout(new BoxLayout(panelTop, BoxLayout.LINE_AXIS));

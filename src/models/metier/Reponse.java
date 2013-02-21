@@ -6,18 +6,18 @@ package models.metier;
  */
 public class Reponse {
     private int id;
-    private Question question;
     private String intitule;
+    private boolean isJuste;
     
     public Reponse(){
         id = 0;
-        question = null;
         intitule = null;
     }
     
-    public Reponse(int i, String in){
+    public Reponse(int i, String in, boolean isJuste){
         id = i;
         intitule = in;
+        this.isJuste = isJuste;
     }
     
     public int getId(){
@@ -27,16 +27,16 @@ public class Reponse {
     public void setId(int i){
         id = i;
     }
-    
-    public Question getQuestion(){
-        return question;
-    }
-    
-    public void setQuestion(Question q){
-        question = q;
-    }
-    
-    public String getIntitule(){
+
+    public boolean isJuste() {
+		return isJuste;
+	}
+
+	public void setJuste(boolean isJuste) {
+		this.isJuste = isJuste;
+	}
+
+	public String getIntitule(){
         return intitule;
     }
     

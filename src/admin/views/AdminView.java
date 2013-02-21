@@ -16,6 +16,7 @@ import javax.swing.JTable;
 
 import admin.controllers.AdminQuestionController;
 import admin.models.AdminQuestionModel;
+import admin.models.AdminReponseModel;
 import admin.views.AdminObservable;
 
 public class AdminView extends JFrame implements AdminObservable {
@@ -36,9 +37,10 @@ public class AdminView extends JFrame implements AdminObservable {
 		this.setTitle("Gestion des questions");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		this.controller = new AdminQuestionController(this);
+
 		buildGUI();
 		
-		this.controller = new AdminQuestionController(this);
 		this.controller.fillQuestionsTable();
 
 		this.setSize(1000, 520);
@@ -80,6 +82,8 @@ public class AdminView extends JFrame implements AdminObservable {
 
 		JPanel left = new JPanel();
 		JComboBox box = new JComboBox();
+		box.addItemListener(controller);
+
 		box.addItem("Facile");
 		box.addItem("Moyen");
 		box.addItem("Difficile");
@@ -124,6 +128,7 @@ public class AdminView extends JFrame implements AdminObservable {
 		p.setLayout(new BoxLayout(p, BoxLayout.LINE_AXIS));
 		
 		questionsTable = new JTable();
+		questionsTable.addMouseListener(controller);
 		JScrollPane scrollPane = new JScrollPane(questionsTable);
 		p.add(scrollPane);
 		return p;
@@ -136,6 +141,14 @@ public class AdminView extends JFrame implements AdminObservable {
 	private void resizeQuestionsTable() {
 		questionsTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		questionsTable.getColumnModel().getColumn(0).setPreferredWidth(850);
+	}
+
+	/*
+	 * Mise à la bonne taille du tableau de la liste des réponses
+	 */
+	private void resizeResponsesTable() {
+		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		responsesTable.getColumnModel().getColumn(0).setPreferredWidth(850);
 	}
 
 	/*
@@ -160,9 +173,26 @@ public class AdminView extends JFrame implements AdminObservable {
 	private void columnResponsesTable() {
 		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 	}
+	
+	
+
+	public JTable getQuestionsTable() {
+		return questionsTable;
+	}
+
+	public void setQuestionsTable(JTable questionsTable) {
+		this.questionsTable = questionsTable;
+	}
 
 	@Override
 	public void fillQuestion(AdminQuestionModel model) {
 		this.questionsTable.setModel(model);
+		this.resizeQuestionsTable();
+	}
+
+	@Override
+	public void fillReponse(AdminReponseModel model) {
+		this.responsesTable.setModel(model);
+		this.resizeResponsesTable();
 	}
 }

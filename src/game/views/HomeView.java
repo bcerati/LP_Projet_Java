@@ -77,7 +77,7 @@ public class HomeView extends JFrame {
 		rules = new Button("regles_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
 		rules.addActionListener(new HomeController(this));
 		rules.setActionCommand("rules");
-		
+
 		newGame = new Button("jouer_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
 		newGame.addActionListener(new HomeController(this));
 		newGame.setActionCommand("newGame");
