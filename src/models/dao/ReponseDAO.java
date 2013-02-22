@@ -59,5 +59,25 @@ public class ReponseDAO {
 		
 		return v;
 	}
+	
+	public void delete(Reponse r) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+		Statement st = null;
+
+		try {
+			st = (Statement) co.createStatement();
+			st.executeUpdate("DELETE FROM reponse WHERE id_reponse=" + r.getId());
+		} catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		} finally {
+			try {
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+	}
 
 }

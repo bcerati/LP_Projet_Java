@@ -118,5 +118,34 @@ public class QuestionDAO {
 		}
 		return q;
 	}
+	
+	public void delete(Question q) {
+		ReponseDAO repDAO = ReponseDAO.getInstance();
+
+		// Suppression des réponses
+		for(Reponse r : q.getReponses()) {
+			repDAO.delete(r);
+		}
+		
+		// Suppression de la question
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+		Statement st = null;
+
+		try {
+			st = (Statement) co.createStatement();
+			st.executeUpdate("DELETE FROM question WHERE id_question=" + q.getId());
+		} catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		} finally {
+			try {
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+
+	}
 
 }

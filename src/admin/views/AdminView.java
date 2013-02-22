@@ -34,6 +34,8 @@ public class AdminView extends JFrame implements AdminObservable {
 	private Button btnAddResponse;	
 	private Button btnDeleteResponse;
 	private Button btnEditResponse;
+	
+	private JComboBox box;
 
 	public AdminView() {
 		this.setTitle("Gestion des questions");
@@ -84,7 +86,7 @@ public class AdminView extends JFrame implements AdminObservable {
 		p.setLayout(new BoxLayout(p, BoxLayout.LINE_AXIS));
 
 		JPanel left = new JPanel();
-		JComboBox box = new JComboBox();
+		box = new JComboBox();
 		box.addItemListener(controller);
 
 		box.addItem("Facile");
@@ -131,6 +133,8 @@ public class AdminView extends JFrame implements AdminObservable {
 		btnEditQuestion.addActionListener(controller);
 		
 		btnDeleteQuestion = new Button("deleteQuestion.png", 216, 34);
+		btnDeleteQuestion.setActionCommand("delete_question");
+		btnDeleteQuestion.addActionListener(controller);
 
 		btnQuestions.add(new JPanel());
 		btnQuestions.add(new JPanel());
@@ -211,6 +215,10 @@ public class AdminView extends JFrame implements AdminObservable {
 		this.questionsTable = questionsTable;
 	}
 
+	public JComboBox getBox() {
+		return box;
+	}
+
 	@Override
 	public void fillQuestions(AdminQuestionsModel model) {
 		this.questionsTable.setModel(model);
@@ -221,5 +229,25 @@ public class AdminView extends JFrame implements AdminObservable {
 	public void fillResponses(AdminResponsesModel model) {
 		this.responsesTable.setModel(model);
 		this.resizeResponsesTable();
+	}
+
+	public void visibilityBtn() {
+
+		if(this.controller.getQuestionsModel().getData().size() == 0) {
+			this.btnDeleteQuestion.setVisible(false);
+			this.btnEditQuestion.setVisible(false);
+
+			this.btnAddResponse.setVisible(false);
+			this.btnEditResponse.setVisible(false);
+			this.btnDeleteResponse.setVisible(false);
+		}
+		else {
+			this.btnDeleteQuestion.setVisible(true);
+			this.btnEditQuestion.setVisible(true);
+
+			this.btnAddResponse.setVisible(true);
+			this.btnEditResponse.setVisible(true);
+			this.btnDeleteResponse.setVisible(true);
+		}
 	}
 }

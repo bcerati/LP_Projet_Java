@@ -75,8 +75,17 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 				niveau_regarde = 3;
 
 			this.fillQuestionsTable();
+			this.view.visibilityBtn();
 			}
 		
+	}
+
+	public AdminQuestionsModel getQuestionsModel() {
+		return questionsModel;
+	}
+
+	public AdminResponsesModel getResponsesModel() {
+		return responsesModel;
 	}
 
 	@Override
@@ -111,6 +120,20 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 	
 		if(actionCommand.equals("edit_question")) {
 			new MajQuestionView(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
+		}
+		
+		if(actionCommand.equals("delete_question")) {
+			Question q = QuestionDAO.getInstance().findOneById(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
+			
+			if(q != null) {
+				QuestionDAO.getInstance().delete(q);
+				this.questionsModel.getData().remove(this.view.getQuestionsTable().getSelectedRow());
+				int actu = niveau_regarde;
+				this.view.getBox().setSelectedIndex(niveau_regarde % 2);
+				this.view.getBox().setSelectedIndex(actu - 1);
+				
+				this.view.visibilityBtn();
+			}
 		}
 	}
 }

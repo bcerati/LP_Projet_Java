@@ -71,9 +71,8 @@ public class MajQuestionView extends JDialog {
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
 
-		btnValid = new Button("validation.png", 128, 128);
-		
-		btnAbort = new Button("abort.png", 128, 128);
+		btnValid = new Button("validation.png", 64, 64);
+		btnAbort = new Button("abort.png", 64, 64);
 		
 		btnValid.setActionCommand("validation");
 		btnValid.addActionListener(controller);
