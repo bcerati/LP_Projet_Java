@@ -125,7 +125,11 @@ public class AdminView extends JFrame implements AdminObservable {
 		btnQuestions.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
 
 		btnAddQuestion = new Button("addQuestion.png", 190, 34);
+		
 		btnEditQuestion = new Button("editQuestion.png", 201, 34);
+		btnEditQuestion.setActionCommand("edit_question");
+		btnEditQuestion.addActionListener(controller);
+		
 		btnDeleteQuestion = new Button("deleteQuestion.png", 216, 34);
 
 		btnQuestions.add(new JPanel());
@@ -198,8 +202,6 @@ public class AdminView extends JFrame implements AdminObservable {
 	private void columnResponsesTable() {
 		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 	}
-	
-	
 
 	public JTable getQuestionsTable() {
 		return questionsTable;

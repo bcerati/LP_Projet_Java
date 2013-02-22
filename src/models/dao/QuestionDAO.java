@@ -73,5 +73,50 @@ public class QuestionDAO {
 
 		return v;
 	}
+	
+	public Question findOneById(int id) {
+		
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		String reqQuestions = "SELECT * FROM question WHERE id_question=" + id;
+
+		Statement st = null;
+		ResultSet res= null;
+		Question q = null;
+
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqQuestions);
+
+			ArrayList<Reponse> aL = null;
+			while (res.next()) {
+				
+				Statement st2 = null;
+				ResultSet res2 = null;
+				String reqRep = "SELECT * FROM reponse r INNER JOIN appartient_reponse a ON r.id_reponse = a.id_reponse WHERE a.id_question="+id;
+				st2 = (Statement) co.createStatement();
+				res2 = st2.executeQuery(reqRep);
+				aL = new ArrayList<Reponse>();
+
+				while(res2.next()) {
+					aL.add(new Reponse(res2.getInt("r.id_reponse"), res2.getString("r.intitule"), res2.getBoolean("a.is_juste")));
+				}
+				st2.close();
+				res2.close();
+
+				q = new Question(res.getInt("id_question"), res.getString("intitule"), aL, res.getInt("niveau"));
+			}
+		} catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		} finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+		return q;
+	}
 
 }

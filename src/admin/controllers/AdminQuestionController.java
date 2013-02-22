@@ -1,5 +1,7 @@
 package admin.controllers;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
@@ -13,8 +15,9 @@ import models.metier.Question;
 import admin.models.AdminQuestionsModel;
 import admin.models.AdminResponsesModel;
 import admin.views.AdminView;
+import admin.views.MajQuestionView;
 
-public class AdminQuestionController implements ItemListener, MouseListener {
+public class AdminQuestionController implements ItemListener, MouseListener, ActionListener {
 
 	private AdminView view;
 	private AdminQuestionsModel questionsModel;
@@ -71,7 +74,6 @@ public class AdminQuestionController implements ItemListener, MouseListener {
 			else
 				niveau_regarde = 3;
 
-			System.out.println(niveau_regarde);
 			this.fillQuestionsTable();
 			}
 		
@@ -101,5 +103,14 @@ public class AdminQuestionController implements ItemListener, MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+	String actionCommand = e.getActionCommand();
+	
+		if(actionCommand.equals("edit_question")) {
+			new MajQuestionView(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
+		}
 	}
 }
