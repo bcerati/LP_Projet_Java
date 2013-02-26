@@ -125,7 +125,7 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 			int id_edit = questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId();
 			new MajQuestionView(id_edit);			
 
-			// Jusqu'à la fin du WHILE : on va reselectionner la bonne question dans le bon niveau.
+			// Jusqu'à la fin du WHILE : on va reselectionner la bonne question dans le bon niveau !
 			this.view.getBox().setSelectedIndex(1);
 			
 			boolean go = true;
