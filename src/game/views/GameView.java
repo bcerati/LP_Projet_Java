@@ -5,10 +5,12 @@ import general_views.Button;
 import general_views.Panel;
 
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
@@ -104,7 +106,14 @@ public class GameView extends JFrame {
 	
 	public JPanel buildQuestion() {
 		int caseWidht = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
-		return new Panel("question.png", 10 * caseWidht, caseHeight);
+		
+		String s = "Quel pays a gagné la coupe du monde de Football en 2006 ?";
+		JLabel lbl = new JLabel("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 12px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+s+"</div></body></html>");  
+		
+		Panel p = new Panel("question.png", 10 * caseWidht, caseHeight);
+		p.add(lbl);
+		
+		return p;
 	}
 	
 	public JPanel buildResponses() {
@@ -115,15 +124,27 @@ public class GameView extends JFrame {
 		panelResponses.setPreferredSize(new Dimension(10 * caseWidht, 2 * caseHeight));
 		
 		btnRespA = new Button("reponse_haut_gauche.png", 5 * caseWidht, caseHeight);
+		String s = "<span>A.</span> Les buveurs de thé";
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+s+"</div></body></html>");  
+		btnRespA.add(lbl);
 		panelResponses.add(btnRespA);
 
 		btnRespB = new Button("reponse_haut_droit.png", 5 * caseWidht, caseHeight);
+		s = "<span>B.</span> Les mangeurs de baguettes";
+		lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+s+"</div></body></html>");  
+		btnRespB.add(lbl);
 		panelResponses.add(btnRespB);
 
 		btnRespC = new Button("reponse_bas_gauche.png", 5 * caseWidht, caseHeight);
+		s = "<span>C.</span> Les mangeur de pizzas";
+		lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+s+"</div></body></html>");  
+		btnRespC.add(lbl);
 		panelResponses.add(btnRespC);
 
 		btnRespD = new Button("reponse_bas_droit.png", 5 * caseWidht, caseHeight);
+		s = "<span>D.</span> Les casques à pointe";
+		lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+s+"</div></body></html>");  
+		btnRespD.add(lbl);
 		panelResponses.add(btnRespD);
 		
 		return panelResponses;
