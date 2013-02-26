@@ -129,7 +129,9 @@ public class AdminView extends JFrame implements AdminObservable {
 		btnQuestions.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
 
 		btnAddQuestion = new Button("addQuestion.png", 190, 34);
-		
+		btnAddQuestion.setActionCommand("add_question");
+		btnAddQuestion.addActionListener(controller);
+
 		btnEditQuestion = new Button("editQuestion.png", 201, 34);
 		btnEditQuestion.setActionCommand("edit_question");
 		btnEditQuestion.addActionListener(controller);

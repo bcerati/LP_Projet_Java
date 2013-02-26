@@ -174,7 +174,23 @@ public class QuestionDAO {
 
 		// Nouvelle question
 		else {
-			
+			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+			Statement st = null;
+
+			try {
+				st = (Statement) co.createStatement();
+				st.executeUpdate("INSERT INTO question(intitule, niveau) VALUES('" + q.getIntitule() + "', "+q.getNiveau()+")");
+			} catch (SQLException se) {
+				System.out.println("Erreur requête SQL : " + se.getMessage());
+			} finally {
+				try {
+					st.close();
+				}
+				catch (Exception e) {
+					System.out.println("charge : erreur close "+e.getMessage());
+				}
+			}
 		}
 	}
 

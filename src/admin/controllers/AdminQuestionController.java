@@ -121,9 +121,17 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 	public void actionPerformed(ActionEvent e) {
 	String actionCommand = e.getActionCommand();
 	
-		if(actionCommand.equals("edit_question")) {
+		if(actionCommand.equals("add_question")) {
+			new MajQuestionView(niveau_regarde, true);			
+			int actu = niveau_regarde;
+			this.view.getBox().setSelectedIndex(niveau_regarde % 2);
+			this.view.getBox().setSelectedIndex(actu - 1);
+			this.view.getQuestionsTable().getSelectionModel().setSelectionInterval(this.questionsModel.getData().size() - 1, this.questionsModel.getData().size() - 1);
+		}
+	
+		else if(actionCommand.equals("edit_question")) {
 			int id_edit = questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId();
-			new MajQuestionView(id_edit);			
+			new MajQuestionView(id_edit, false);			
 
 			// Jusqu'à la fin du WHILE : on va reselectionner la bonne question dans le bon niveau !
 			this.view.getBox().setSelectedIndex(1);

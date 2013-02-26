@@ -10,6 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -27,19 +28,15 @@ public class MajQuestionView extends JDialog {
 	private Button btnValid;	
 	private Button btnAbort;
 
-	public MajQuestionView() {
-		this(0);
-	}
-	
-	public MajQuestionView(int question_id) {
+	public MajQuestionView(int nb, boolean isAdd) {
 		setModal(true);
 
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
 		this.add(p);
-		this.add(buildFieldPanel());
+		this.add(buildFieldPanel(isAdd));
 
-		controller = new MajQuestionController(this, question_id);
+		controller = new MajQuestionController(this, nb, isAdd);
 
 		btnAbort.setActionCommand("close");
 		btnAbort.addActionListener(controller);
@@ -51,7 +48,7 @@ public class MajQuestionView extends JDialog {
 		setVisible(true);
 	}
 	
-	private JPanel buildFieldPanel() {
+	private JPanel buildFieldPanel(boolean isAdd) {
 
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
@@ -74,6 +71,9 @@ public class MajQuestionView extends JDialog {
 		box.addItem("Difficile");
 		box.setBorder(new EmptyBorder(20, 0, 0, 0));
 		fieldsPanel.add(box);
+		
+		if(isAdd)
+			box.setEnabled(false);
 
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
@@ -107,6 +107,10 @@ public class MajQuestionView extends JDialog {
 
 	public void setBox(JComboBox box) {
 		this.box = box;
+	}
+
+	public void showErrorEmptyInput() {
+		JOptionPane.showMessageDialog(this, "Vous devez remplir l'intitulé de la question !", "Erreur", JOptionPane.ERROR_MESSAGE);		
 	}
 
 
