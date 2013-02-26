@@ -12,6 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -51,6 +52,7 @@ public class AdminView extends JFrame implements AdminObservable {
 
 		resizeQuestionsTable();
 		columnResponsesTable();
+		questionsTable.getSelectionModel().addListSelectionListener(controller);
 
 		this.setResizable(false);
 		this.setVisible(true);
@@ -117,7 +119,7 @@ public class AdminView extends JFrame implements AdminObservable {
 		p.setLayout(new BoxLayout(p, BoxLayout.LINE_AXIS));
 		
 		questionsTable = new JTable();
-		questionsTable.addMouseListener(controller);
+
 		JScrollPane scrollPane = new JScrollPane(questionsTable);
 		scrollPane.setPreferredSize(new Dimension(830, 400));
 
@@ -249,5 +251,9 @@ public class AdminView extends JFrame implements AdminObservable {
 			this.btnEditResponse.setVisible(true);
 			this.btnDeleteResponse.setVisible(true);
 		}
+	}
+	
+	public int deleteConfirm() {
+		return JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment supprimer cette question ?", "Confirmation", JOptionPane.YES_NO_OPTION);
 	}
 }

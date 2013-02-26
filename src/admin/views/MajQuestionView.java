@@ -27,6 +27,10 @@ public class MajQuestionView extends JDialog {
 	private Button btnValid;	
 	private Button btnAbort;
 
+	public MajQuestionView() {
+		this(0);
+	}
+	
 	public MajQuestionView(int question_id) {
 		setModal(true);
 
@@ -40,10 +44,13 @@ public class MajQuestionView extends JDialog {
 		btnAbort.setActionCommand("close");
 		btnAbort.addActionListener(controller);
 
+		btnValid.setActionCommand("validation");
+		btnValid.addActionListener(controller);
+
 		this.pack();
 		setVisible(true);
 	}
-
+	
 	private JPanel buildFieldPanel() {
 
 		JPanel p = new JPanel();

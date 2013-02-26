@@ -147,5 +147,35 @@ public class QuestionDAO {
 		}
 
 	}
+	
+	public void save(Question q) {
+
+		// UPDATE
+		if(q.getId() != 0) {
+			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+			Statement st = null;
+
+			try {
+				st = (Statement) co.createStatement();
+				st.executeUpdate("UPDATE question SET intitule='" + q.getIntitule() + "', niveau=" + q.getNiveau() + " WHERE id_question=" + q.getId());
+			} catch (SQLException se) {
+				System.out.println("Erreur requête SQL : " + se.getMessage());
+			} finally {
+				try {
+					st.close();
+				}
+				catch (Exception e) {
+					System.out.println("charge : erreur close "+e.getMessage());
+				}
+			}
+
+		}
+
+		// Nouvelle question
+		else {
+			
+		}
+	}
 
 }

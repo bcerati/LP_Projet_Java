@@ -8,6 +8,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import models.dao.QuestionDAO;
 import models.dao.ReponseDAO;
 import models.metier.Question;
@@ -17,7 +21,7 @@ import admin.models.AdminResponsesModel;
 import admin.views.AdminView;
 import admin.views.MajQuestionView;
 
-public class AdminQuestionController implements ItemListener, MouseListener, ActionListener {
+public class AdminQuestionController implements ItemListener, MouseListener, ActionListener, ListSelectionListener {
 
 	private AdminView view;
 	private AdminQuestionsModel questionsModel;
@@ -90,8 +94,7 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Vector<Question> q = (((AdminQuestionsModel) (view.getQuestionsTable().getModel())).getData());
-		fillReponsesTable(q.get(view.getQuestionsTable().getSelectedRow()).getId());
+
 	}
 
 	@Override
@@ -119,21 +122,60 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 	String actionCommand = e.getActionCommand();
 	
 		if(actionCommand.equals("edit_question")) {
-			new MajQuestionView(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
-		}
-		
-		if(actionCommand.equals("delete_question")) {
-			Question q = QuestionDAO.getInstance().findOneById(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
+			int id_edit = questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId();
+			new MajQuestionView(id_edit);			
+
+			// Jusqu'à la fin du WHILE : on va reselectionner la bonne question dans le bon niveau.
+			this.view.getBox().setSelectedIndex(1);
 			
-			if(q != null) {
-				QuestionDAO.getInstance().delete(q);
-				this.questionsModel.getData().remove(this.view.getQuestionsTable().getSelectedRow());
-				int actu = niveau_regarde;
-				this.view.getBox().setSelectedIndex(niveau_regarde % 2);
-				this.view.getBox().setSelectedIndex(actu - 1);
-				
-				this.view.visibilityBtn();
+			boolean go = true;
+			int n = 0, real_niveau = -1, line = -1;
+
+			// On parcourt tous les niveau (à moins qu'on a retrouvé la bonne question avant)
+			while(go && n < 3) {
+				this.view.getBox().setSelectedIndex(n);
+
+				for(int i = 0 ; i < questionsModel.getData().size() ; i++) {
+					
+					if(questionsModel.getData().get(i).getId() == id_edit) {
+						real_niveau = n;
+						line = i;
+						go = false;
+					}
+				}
+				n++;
 			}
+			this.view.getBox().setSelectedIndex(real_niveau);
+			this.view.getQuestionsTable().getSelectionModel().setSelectionInterval(line, line);
+		}
+
+		else if(actionCommand.equals("delete_question")) {
+			
+			if(view.deleteConfirm() == JOptionPane.YES_OPTION) {
+				Question q = QuestionDAO.getInstance().findOneById(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
+				
+				if(q != null) {
+					QuestionDAO.getInstance().delete(q);
+					this.questionsModel.getData().remove(this.view.getQuestionsTable().getSelectedRow());
+					int actu = niveau_regarde;
+					this.view.getBox().setSelectedIndex(niveau_regarde % 2);
+					this.view.getBox().setSelectedIndex(actu - 1);
+					
+					this.view.visibilityBtn();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		Vector<Question> q = (((AdminQuestionsModel) (view.getQuestionsTable().getModel())).getData());
+		
+		try {
+		if(q.size() > 0)
+			fillReponsesTable(q.get(view.getQuestionsTable().getSelectedRow()).getId());
+		} catch(Exception exc) {
+			
 		}
 	}
 }

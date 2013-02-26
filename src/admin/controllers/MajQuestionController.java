@@ -11,6 +11,7 @@ import admin.views.MajQuestionView;
 
 public class MajQuestionController implements ActionListener {
 	private MajQuestionView view;
+	private int id_question;
 	
 	public MajQuestionController(MajQuestionView v) {
 		view = v;
@@ -18,7 +19,8 @@ public class MajQuestionController implements ActionListener {
 	
 	public MajQuestionController(MajQuestionView v, int id_question) {
 		this(v);
-		
+		this.id_question = id_question;
+
 		fillForm(id_question);
 	}
 
@@ -27,7 +29,6 @@ public class MajQuestionController implements ActionListener {
 		if(q != null) {
 			this.view.getIntitule().setText(q.getIntitule());
 			this.view.getBox().setSelectedIndex(q.getNiveau() - 1);
-			System.out.println(q.getReponses().get(1));
 		}
 	}
 
@@ -36,6 +37,15 @@ public class MajQuestionController implements ActionListener {
 		String actionCommand = e.getActionCommand();
 		
 		if(actionCommand.equals("close")) {
+			this.view.dispose();
+		}
+		
+		else if(actionCommand.equals("validation")) {
+			String intitulle = this.view.getIntitule().getText();
+			int niveau = this.view.getBox().getSelectedIndex() + 1;
+			Question q = new Question(id_question, intitulle, null, niveau);
+
+			QuestionDAO.getInstance().save(q);
 			this.view.dispose();
 		}
 	}
