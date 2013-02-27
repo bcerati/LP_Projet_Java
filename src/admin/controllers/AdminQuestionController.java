@@ -25,7 +25,6 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 
 	private AdminView view;
 	private AdminQuestionsModel questionsModel;
-	private AdminResponsesModel responsesModel;
 	private int niveau_regarde;
 
 	public AdminQuestionController(AdminView v) {
@@ -42,25 +41,8 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 		view.fillQuestions(questionsModel);
 		questionsModel.setData(QuestionDAO.getInstance().findALlByNiveau(niveau_regarde));
 		questionsModel.fireTableDataChanged();
-
-		if(questionsModel.getData() != null && questionsModel.getData().size() > 0)
-			fillReponsesTable(questionsModel.getData().get(0).getId());
-		else
-			fillReponsesTable(0);
 		
 		view.resizeQuestionsTable();
-		view.resizeResponsesTable();
-	}
-
-	/*
-	 * Récupération des questions + remplissage de la JTable
-	 */
-	public void fillReponsesTable(int id_question) {
-		this.responsesModel = new AdminResponsesModel();
-
-		view.fillResponses(responsesModel);
-		responsesModel.setData(ReponseDAO.getInstance().findALlByQuestion(id_question));
-		responsesModel.fireTableDataChanged();
 	}
 
 	@Override
@@ -79,17 +61,12 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 				niveau_regarde = 3;
 
 			this.fillQuestionsTable();
-			this.view.visibilityBtn();
 			}
 		
 	}
 
 	public AdminQuestionsModel getQuestionsModel() {
 		return questionsModel;
-	}
-
-	public AdminResponsesModel getResponsesModel() {
-		return responsesModel;
 	}
 
 	@Override
@@ -122,11 +99,9 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 	String actionCommand = e.getActionCommand();
 	
 		if(actionCommand.equals("add_question")) {
-			new MajQuestionView(niveau_regarde, true);			
-			int actu = niveau_regarde;
-			this.view.getBox().setSelectedIndex(niveau_regarde % 2);
-			this.view.getBox().setSelectedIndex(actu - 1);
-			this.view.getQuestionsTable().getSelectionModel().setSelectionInterval(this.questionsModel.getData().size() - 1, this.questionsModel.getData().size() - 1);
+
+			view.getQuestionsTable().getSelectionModel().removeSelectionInterval(0,view.getQuestionsTable().getModel().getRowCount());
+			view.getBtnDeleteQuestion().setVisible(false);
 		}
 	
 		else if(actionCommand.equals("edit_question")) {
@@ -168,8 +143,6 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 					int actu = niveau_regarde;
 					this.view.getBox().setSelectedIndex(niveau_regarde % 2);
 					this.view.getBox().setSelectedIndex(actu - 1);
-					
-					this.view.visibilityBtn();
 				}
 			}
 		}
@@ -177,13 +150,27 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		Vector<Question> q = (((AdminQuestionsModel) (view.getQuestionsTable().getModel())).getData());
-		
-		try {
-		if(q.size() > 0)
-			fillReponsesTable(q.get(view.getQuestionsTable().getSelectedRow()).getId());
-		} catch(Exception exc) {
-			
+		Vector<Question> qList = (((AdminQuestionsModel) (view.getQuestionsTable().getModel())).getData());
+
+		if(qList.size() > 0 && view.getQuestionsTable().getSelectedRow() >= 0) {
+			Question q = qList.get(view.getQuestionsTable().getSelectedRow());
+	
+			view.getjQuestion().setText(q.getIntitule());
+			view.getjR1().setText(q.getReponses().get(0).getIntitule());
+			view.getjR2().setText(q.getReponses().get(1).getIntitule());
+			view.getjR3().setText(q.getReponses().get(2).getIntitule());
+			view.getjR4().setText(q.getReponses().get(3).getIntitule());
+			view.getBtnVal().setText("Modifier la question");
+			view.getBtnDeleteQuestion().setVisible(true);
+
+		}
+		else {
+			view.getjQuestion().setText("");
+			view.getjR1().setText("");
+			view.getjR2().setText("");
+			view.getjR3().setText("");
+			view.getjR4().setText("");
+			view.getBtnVal().setText("Ajouter la nouvelle question");
 		}
 	}
 }

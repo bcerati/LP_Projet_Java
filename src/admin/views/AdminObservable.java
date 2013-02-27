@@ -6,5 +6,4 @@ import admin.models.AdminResponsesModel;
 public interface AdminObservable {
 
 	public void fillQuestions(AdminQuestionsModel model);
-	public void fillResponses(AdminResponsesModel model);
 }

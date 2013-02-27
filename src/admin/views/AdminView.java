@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import admin.controllers.AdminQuestionController;
 import admin.models.AdminQuestionsModel;
@@ -25,16 +27,18 @@ import admin.views.AdminObservable;
 public class AdminView extends JFrame implements AdminObservable {
 
 	private JTable questionsTable;
-	private JTable responsesTable;
 
 	private AdminQuestionController controller;
 	
 	private Button btnAddQuestion;
-	private Button btnEditQuestion;
 	private Button btnDeleteQuestion;
-	private Button btnAddResponse;	
-	private Button btnDeleteResponse;
-	private Button btnEditResponse;
+	
+	private JTextField jQuestion;
+	private JTextField jR1;
+	private JTextField jR2;
+	private JTextField jR3;
+	private JTextField jR4;
+	private JButton btnVal;
 	
 	private JComboBox box;
 
@@ -51,8 +55,8 @@ public class AdminView extends JFrame implements AdminObservable {
 		this.setSize(1000, 520);
 
 		resizeQuestionsTable();
-		columnResponsesTable();
 		questionsTable.getSelectionModel().addListSelectionListener(controller);
+		questionsTable.getSelectionModel().removeSelectionInterval(0,questionsTable.getModel().getRowCount());
 
 		this.setResizable(false);
 		this.setVisible(true);
@@ -67,15 +71,15 @@ public class AdminView extends JFrame implements AdminObservable {
 
 		JPanel pQuestions = this.buildQuestionsPanel();
 
-		JPanel pResponse = this.buildResponsesPanel();
-		pResponse.setPreferredSize(new Dimension(1000, 200));
+		JPanel pForm = this.buildFormPanel();
+		pForm.setPreferredSize(new Dimension(1000, 150));
 
 		JPanel pTop = this.buildTopPanel();
 		pTop.setPreferredSize(new Dimension(1000, 30));
 
 		p.add(pTop);
 		p.add(pQuestions);
-		p.add(pResponse);
+		p.add(pForm);
 
 		this.add(p);
 	}
@@ -109,6 +113,53 @@ public class AdminView extends JFrame implements AdminObservable {
 
 		return p;
 	}
+	
+	public JPanel buildFormPanel() {
+		JPanel p = new JPanel();
+		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createTitledBorder("Gestion de la question")));
+		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
+		
+		jQuestion = new JTextField();
+		
+		jR1 = new JTextField();
+		jR2 = new JTextField();
+		jR3 = new JTextField();
+		jR4 = new JTextField();
+
+		JPanel pReponses1 = new JPanel();
+		pReponses1.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 15));
+		pReponses1.setLayout(new BoxLayout(pReponses1, BoxLayout.LINE_AXIS));
+		
+		JPanel pReponse2 = new JPanel();
+		pReponse2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
+		pReponse2.setLayout(new BoxLayout(pReponse2, BoxLayout.LINE_AXIS));
+
+		JLabel lblA = new JLabel("A."), lblB = new JLabel("B."), lblC = new JLabel("C."), lblD = new JLabel("D.");
+		lblA.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+		lblB.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+		lblC.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+		lblD.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
+		
+		pReponses1.add(lblA);
+		pReponses1.add(jR1);
+		
+		pReponses1.add(lblB);
+		pReponses1.add(jR2);
+		
+		pReponse2.add(lblC);
+		pReponse2.add(jR3);
+
+		pReponse2.add(lblD);
+		pReponse2.add(jR4);
+
+		p.add(jQuestion);
+		p.add(pReponses1);
+		p.add(pReponse2);
+
+		btnVal = new JButton("Valider");
+		p.add(btnVal);
+		return p;
+	}
 
 	/*
 	 * Construction du panel qui contient la liste des questions par niveau
@@ -131,19 +182,15 @@ public class AdminView extends JFrame implements AdminObservable {
 		btnAddQuestion = new Button("addQuestion.png", 190, 34);
 		btnAddQuestion.setActionCommand("add_question");
 		btnAddQuestion.addActionListener(controller);
-
-		btnEditQuestion = new Button("editQuestion.png", 201, 34);
-		btnEditQuestion.setActionCommand("edit_question");
-		btnEditQuestion.addActionListener(controller);
 		
 		btnDeleteQuestion = new Button("deleteQuestion.png", 216, 34);
 		btnDeleteQuestion.setActionCommand("delete_question");
 		btnDeleteQuestion.addActionListener(controller);
+		btnDeleteQuestion.setVisible(false);
 
 		btnQuestions.add(new JPanel());
 		btnQuestions.add(new JPanel());
 		btnQuestions.add(btnAddQuestion);
-		btnQuestions.add(btnEditQuestion);
 		btnQuestions.add(btnDeleteQuestion);
 		btnQuestions.add(new JPanel());
 		btnQuestions.add(new JPanel());
@@ -164,53 +211,6 @@ public class AdminView extends JFrame implements AdminObservable {
 		questionsTable.getSelectionModel().addSelectionInterval(0, 0);
 	}
 
-	/*
-	 * Mise à la bonne taille du tableau de la liste des réponses
-	 */
-	public void resizeResponsesTable() {
-		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		responsesTable.getColumnModel().getColumn(0).setPreferredWidth(850);
-		responsesTable.getSelectionModel().addSelectionInterval(0, 0);
-	}
-
-	/*
-	 * Construction du panel qui contient la liste des réponses associées à une question
-	 */
-	public JPanel buildResponsesPanel() {
-		JPanel p = new JPanel();
-		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createTitledBorder("Réponses associées")));
-		p.setLayout(new BoxLayout(p, BoxLayout.LINE_AXIS));
-		
-		responsesTable = new JTable();
-		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		JScrollPane scrollPane = new JScrollPane(responsesTable);
-		scrollPane.setPreferredSize(new Dimension(830, 190));
-		
-		GridLayout g = new GridLayout(3, 1);
-		g.setVgap(5);
-		JPanel btnResponses = new JPanel(g);
-		btnResponses.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 5));
-
-		btnAddResponse = new Button("addResponse.png", 205, 34);
-		btnEditResponse = new Button("editResponse.png", 198, 34);
-		btnDeleteResponse = new Button("deleteResponse.png", 213, 34);
-
-		btnResponses.add(btnAddResponse);
-		btnResponses.add(btnEditResponse);
-		btnResponses.add(btnDeleteResponse);
-
-		p.add(scrollPane);
-		p.add(btnResponses);
-		return p;
-	}
-
-	/*
-	 * Mise à la bonne taille du tableau de la liste des réponses
-	 */
-	private void columnResponsesTable() {
-		responsesTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-	}
-
 	public JTable getQuestionsTable() {
 		return questionsTable;
 	}
@@ -223,38 +223,40 @@ public class AdminView extends JFrame implements AdminObservable {
 		return box;
 	}
 
+	public JTextField getjQuestion() {
+		return jQuestion;
+	}
+
+	public JTextField getjR1() {
+		return jR1;
+	}
+
+	public JTextField getjR2() {
+		return jR2;
+	}
+
+	public JTextField getjR3() {
+		return jR3;
+	}
+
+	public JTextField getjR4() {
+		return jR4;
+	}
+	
+	public JButton getBtnVal() {
+		return btnVal;
+	}
+
+	public Button getBtnDeleteQuestion() {
+		return btnDeleteQuestion;
+	}
+
 	@Override
 	public void fillQuestions(AdminQuestionsModel model) {
 		this.questionsTable.setModel(model);
 		this.resizeQuestionsTable();
 	}
 
-	@Override
-	public void fillResponses(AdminResponsesModel model) {
-		this.responsesTable.setModel(model);
-		this.resizeResponsesTable();
-	}
-
-	public void visibilityBtn() {
-
-		if(this.controller.getQuestionsModel().getData().size() == 0) {
-			this.btnDeleteQuestion.setVisible(false);
-			this.btnEditQuestion.setVisible(false);
-
-			this.btnAddResponse.setVisible(false);
-			this.btnEditResponse.setVisible(false);
-			this.btnDeleteResponse.setVisible(false);
-		}
-		else {
-			this.btnDeleteQuestion.setVisible(true);
-			this.btnEditQuestion.setVisible(true);
-
-			this.btnAddResponse.setVisible(true);
-			this.btnEditResponse.setVisible(true);
-			this.btnDeleteResponse.setVisible(true);
-		}
-	}
-	
 	public int deleteConfirm() {
 		return JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment supprimer cette question ?", "Confirmation", JOptionPane.YES_NO_OPTION);
 	}
