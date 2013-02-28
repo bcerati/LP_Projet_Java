@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -15,11 +16,11 @@ import javax.swing.event.ListSelectionListener;
 import models.dao.QuestionDAO;
 import models.dao.ReponseDAO;
 import models.metier.Question;
+import models.metier.Reponse;
 
 import admin.models.AdminQuestionsModel;
 import admin.models.AdminResponsesModel;
 import admin.views.AdminView;
-import admin.views.MajQuestionView;
 
 public class AdminQuestionController implements ItemListener, MouseListener, ActionListener, ListSelectionListener {
 
@@ -62,7 +63,6 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 
 			this.fillQuestionsTable();
 			}
-		
 	}
 
 	public AdminQuestionsModel getQuestionsModel() {
@@ -98,38 +98,93 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 	public void actionPerformed(ActionEvent e) {
 	String actionCommand = e.getActionCommand();
 	
+		// On a appuyé sur le bouton "ajouter une question"
 		if(actionCommand.equals("add_question")) {
-
 			view.getQuestionsTable().getSelectionModel().removeSelectionInterval(0,view.getQuestionsTable().getModel().getRowCount());
 			view.getBtnDeleteQuestion().setVisible(false);
+			view.getRadioGroup().clearSelection();
 		}
-	
-		else if(actionCommand.equals("edit_question")) {
-			int id_edit = questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId();
-			new MajQuestionView(id_edit, false);			
 
-			// Jusqu'à la fin du WHILE : on va reselectionner la bonne question dans le bon niveau !
-			this.view.getBox().setSelectedIndex(1);
-			
-			boolean go = true;
-			int n = 0, real_niveau = -1, line = -1;
+		// On a validé l'ajout (ou la modification)
+		else if(actionCommand.equals("addOrEdit")) {
 
-			// On parcourt tous les niveau (à moins qu'on a retrouvé la bonne question avant)
-			while(go && n < 3) {
-				this.view.getBox().setSelectedIndex(n);
+			// Si tous les champs sont remplis
+			if(view.getjQuestion().getText().length() * view.getjR1().getText().length() * view.getjR2().getText().length() * view.getjR3().getText().length() * view.getjR4().getText().length() > 0) {
+				int id_question_autoselect = 0, niveau_select = 0; // pour savoir quelle question on devrait sélectionner à la fin de l'action (plutôt que de revenir tout en haut de la liste ...)
 
-				for(int i = 0 ; i < questionsModel.getData().size() ; i++) {
+				// Modification de la question
+				if(view.getBtnVal().getText().equals("Modifier la question")) {
+					int row = view.getQuestionsTable().getSelectedRow();
+					Question q = questionsModel.getData().get(row);
+					Reponse r1 = q.getReponses().get(0), r2 = q.getReponses().get(1), r3 = q.getReponses().get(2), r4 = q.getReponses().get(3);
+
+					q.setIntitule(view.getjQuestion().getText());
+					q.setNiveau(view.getBoxEdit().getSelectedIndex() + 1);
+
+					r1.setIntitule(view.getjR1().getText());
+					r1.setJuste(view.getJuste1().isSelected());
 					
-					if(questionsModel.getData().get(i).getId() == id_edit) {
-						real_niveau = n;
-						line = i;
-						go = false;
+					r2.setIntitule(view.getjR2().getText());
+					r2.setJuste(view.getJuste2().isSelected());
+
+					r3.setIntitule(view.getjR3().getText());
+					r3.setJuste(view.getJuste3().isSelected());
+
+					r4.setIntitule(view.getjR4().getText());
+					r4.setJuste(view.getJuste4().isSelected());
+					
+					QuestionDAO.getInstance().save(q);
+					id_question_autoselect = q.getId();
+					niveau_select = view.getBoxEdit().getSelectedIndex() + 1;
+				}
+				
+				// Ajout d'une nouvelle question
+				else {
+					Question q = new Question();
+					Reponse r1 = new Reponse(), r2 = new Reponse(), r3 = new Reponse(), r4 = new Reponse();
+
+					q.setIntitule(view.getjQuestion().getText());
+					q.setNiveau(view.getBoxEdit().getSelectedIndex() + 1);
+					ArrayList<Reponse> reponses = new ArrayList<Reponse>();
+					reponses.add(r1);
+					reponses.add(r2);
+					reponses.add(r3);
+					reponses.add(r4);
+					q.setReponses(reponses);
+					
+					r1.setIntitule(view.getjR1().getText());
+					r1.setJuste(view.getJuste1().isSelected());
+					
+					r2.setIntitule(view.getjR2().getText());
+					r2.setJuste(view.getJuste2().isSelected());
+
+					r3.setIntitule(view.getjR3().getText());
+					r3.setJuste(view.getJuste3().isSelected());
+
+					r4.setIntitule(view.getjR4().getText());
+					r4.setJuste(view.getJuste4().isSelected());
+					
+					id_question_autoselect = QuestionDAO.getInstance().save(q);
+					niveau_select = view.getBoxEdit().getSelectedIndex() + 1;
+				}
+
+				// On met à jour les données avec cette petite technique (jouer sur les évenements)
+				this.view.getBox().setSelectedIndex(0);
+				this.view.getBox().setSelectedIndex(1);
+				this.view.getBox().setSelectedIndex(niveau_select - 1);
+
+				// Sélection de la bonne ligne dans les données
+				for(int i = 0 ; i < questionsModel.getData().size() ; i++) {
+					if(questionsModel.getData().get(i).getId() == id_question_autoselect) {
+						view.getQuestionsTable().getSelectionModel().removeSelectionInterval(0, questionsModel.getData().size());
+						view.getQuestionsTable().getSelectionModel().addSelectionInterval(i, i);
 					}
 				}
-				n++;
+				
 			}
-			this.view.getBox().setSelectedIndex(real_niveau);
-			this.view.getQuestionsTable().getSelectionModel().setSelectionInterval(line, line);
+			else
+				JOptionPane.showMessageDialog(view, "Vous devez remplir tous les champs !", "Erreur", JOptionPane.ERROR_MESSAGE, null);
+
 		}
 
 		else if(actionCommand.equals("delete_question")) {
@@ -156,21 +211,39 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 			Question q = qList.get(view.getQuestionsTable().getSelectedRow());
 	
 			view.getjQuestion().setText(q.getIntitule());
+			
+			view.getBoxEdit().setSelectedIndex(niveau_regarde - 1);
+			
 			view.getjR1().setText(q.getReponses().get(0).getIntitule());
+			view.getJuste1().setSelected((q.getReponses().get(0).isJuste()) ? true : false);
+
 			view.getjR2().setText(q.getReponses().get(1).getIntitule());
+			view.getJuste2().setSelected((q.getReponses().get(1).isJuste()) ? true : false);
+
 			view.getjR3().setText(q.getReponses().get(2).getIntitule());
+			view.getJuste3().setSelected((q.getReponses().get(2).isJuste()) ? true : false);
+
 			view.getjR4().setText(q.getReponses().get(3).getIntitule());
+			view.getJuste4().setSelected((q.getReponses().get(3).isJuste()) ? true : false);
+
 			view.getBtnVal().setText("Modifier la question");
 			view.getBtnDeleteQuestion().setVisible(true);
+			view.getBtnAddQuestion().setVisible(true);
 
 		}
 		else {
 			view.getjQuestion().setText("");
+			view.getBoxEdit().setSelectedIndex(niveau_regarde - 1);
+
 			view.getjR1().setText("");
 			view.getjR2().setText("");
 			view.getjR3().setText("");
 			view.getjR4().setText("");
+			view.getBtnAddQuestion().setVisible(false);
+			view.getBtnDeleteQuestion().setVisible(false);
+
 			view.getBtnVal().setText("Ajouter la nouvelle question");
 		}
+
 	}
 }

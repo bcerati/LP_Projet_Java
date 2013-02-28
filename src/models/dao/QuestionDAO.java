@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
 import models.metier.Question;
@@ -45,13 +46,13 @@ public class QuestionDAO {
 	
 				Statement st2 = null;
 				ResultSet res2 = null;
-				String reqRep = "SELECT * FROM reponse r INNER JOIN appartient_reponse a ON r.id_reponse = a.id_reponse WHERE a.id_question="+res.getInt("id_question");
+				String reqRep = "SELECT * FROM reponse r WHERE id_question="+res.getInt("id_question");
 				st2 = (Statement) co.createStatement();
 				res2 = st2.executeQuery(reqRep);
 				aL = new ArrayList<Reponse>();
 
 				while(res2.next()) {
-					aL.add(new Reponse(res2.getInt("r.id_reponse"), res2.getString("r.intitule"), res2.getBoolean("a.is_juste")));
+					aL.add(new Reponse(res2.getInt("id_reponse"), res2.getString("intitule"), res2.getBoolean("is_juste")));
 				}
 				st2.close();
 				res2.close();
@@ -92,13 +93,13 @@ public class QuestionDAO {
 				
 				Statement st2 = null;
 				ResultSet res2 = null;
-				String reqRep = "SELECT * FROM reponse r INNER JOIN appartient_reponse a ON r.id_reponse = a.id_reponse WHERE a.id_question="+id;
+				String reqRep = "SELECT * FROM reponse r WHERE id_question="+id;
 				st2 = (Statement) co.createStatement();
 				res2 = st2.executeQuery(reqRep);
 				aL = new ArrayList<Reponse>();
 
 				while(res2.next()) {
-					aL.add(new Reponse(res2.getInt("r.id_reponse"), res2.getString("r.intitule"), res2.getBoolean("a.is_juste")));
+					aL.add(new Reponse(res2.getInt("id_reponse"), res2.getString("intitule"), res2.getBoolean("is_juste")));
 				}
 				st2.close();
 				res2.close();
@@ -120,13 +121,7 @@ public class QuestionDAO {
 	}
 	
 	public void delete(Question q) {
-		ReponseDAO repDAO = ReponseDAO.getInstance();
 
-		// Suppression des réponses
-		for(Reponse r : q.getReponses()) {
-			repDAO.delete(r);
-		}
-		
 		// Suppression de la question
 		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
 
@@ -148,17 +143,26 @@ public class QuestionDAO {
 
 	}
 	
-	public void save(Question q) {
+	public int save(Question q) {
+		ReponseDAO repDAO = ReponseDAO.getInstance();
 
 		// UPDATE
 		if(q.getId() != 0) {
 			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
 
-			Statement st = null;
+			PreparedStatement st = null;
 
 			try {
-				st = (Statement) co.createStatement();
-				st.executeUpdate("UPDATE question SET intitule='" + q.getIntitule() + "', niveau=" + q.getNiveau() + " WHERE id_question=" + q.getId());
+				st = (PreparedStatement) co.prepareStatement("UPDATE question SET intitule=?, niveau=? WHERE id_question=?");
+				st.setString(1, q.getIntitule());
+				st.setInt(2, q.getNiveau());
+				st.setInt(3, q.getId());
+				st.executeUpdate();
+
+				for(Reponse r : q.getReponses()) {
+					repDAO.save(r, q.getId());
+				}
+				
 			} catch (SQLException se) {
 				System.out.println("Erreur requête SQL : " + se.getMessage());
 			} finally {
@@ -169,18 +173,32 @@ public class QuestionDAO {
 					System.out.println("charge : erreur close "+e.getMessage());
 				}
 			}
-
+			return q.getId();
 		}
 
 		// Nouvelle question
 		else {
 			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
 
-			Statement st = null;
+			PreparedStatement st = null;
+			ResultSet rs = null;
+			int id = 0;
 
 			try {
-				st = (Statement) co.createStatement();
-				st.executeUpdate("INSERT INTO question(intitule, niveau) VALUES('" + q.getIntitule() + "', "+q.getNiveau()+")");
+				st = (PreparedStatement) co.prepareStatement("INSERT INTO question(intitule, niveau) VALUES(?, ?)", Statement.RETURN_GENERATED_KEYS);
+				st.setString(1, q.getIntitule());
+				st.setInt(2, q.getNiveau());
+				st.executeUpdate();
+				rs = st.getGeneratedKeys();
+				
+				while(rs.next()) {
+					id = rs.getInt(1);
+				}
+				
+				for(Reponse r : q.getReponses()) {
+					repDAO.save(r, id);
+				}
+
 			} catch (SQLException se) {
 				System.out.println("Erreur requête SQL : " + se.getMessage());
 			} finally {
@@ -191,6 +209,7 @@ public class QuestionDAO {
 					System.out.println("charge : erreur close "+e.getMessage());
 				}
 			}
+			return id;
 		}
 	}
 

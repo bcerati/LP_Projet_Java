@@ -32,7 +32,7 @@ public class ReponseDAO {
 		Vector<Reponse> v = new Vector<Reponse>();
 
 		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
-		String reqQuestions = "SELECT * FROM reponse r INNER JOIN appartient_reponse a ON r.id_reponse = a.id_reponse WHERE a.id_question=" + q + " ORDER BY r.id_reponse";
+		String reqQuestions = "SELECT * FROM reponse r WHERE id_question=" + q + " ORDER BY r.id_reponse";
 
 		Statement st = null;
 		ResultSet res= null;
@@ -42,7 +42,7 @@ public class ReponseDAO {
 			res = st.executeQuery(reqQuestions);
 
 			while (res.next()) {				
-				v.add(new Reponse(res.getInt("r.id_reponse"), res.getString("r.intitule"), res.getBoolean("is_juste")));
+				v.add(new Reponse(res.getInt("id_reponse"), res.getString("intitule"), res.getBoolean("is_juste")));
 			}
 			
 		} catch (SQLException se) {
@@ -60,22 +60,50 @@ public class ReponseDAO {
 		return v;
 	}
 	
-	public void delete(Reponse r) {
-		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+	public void save(Reponse r, int id_question) {
+		
+		// UPDATE
+		if(r.getId() != 0) {
+			
+			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
 
-		Statement st = null;
+			Statement st = null;
 
-		try {
-			st = (Statement) co.createStatement();
-			st.executeUpdate("DELETE FROM reponse WHERE id_reponse=" + r.getId());
-		} catch (SQLException se) {
-			System.out.println("Erreur requête SQL : " + se.getMessage());
-		} finally {
 			try {
-				st.close();
+				st = (Statement) co.createStatement();
+				st.executeUpdate("UPDATE reponse SET intitule='" + r.getIntitule() + "', is_juste=" + r.isJuste() + " WHERE id_reponse=" + r.getId());
+				
+			} catch (SQLException se) {
+				System.out.println("Erreur requête SQL : " + se.getMessage());
+			} finally {
+				try {
+					st.close();
+				}
+				catch (Exception e) {
+					System.out.println("charge : erreur close "+e.getMessage());
+				}
 			}
-			catch (Exception e) {
-				System.out.println("charge : erreur close "+e.getMessage());
+			
+		}
+		
+		// Ajout
+		else {
+			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+			Statement st = null;
+
+			try {
+				st = (Statement) co.createStatement();
+				st.executeUpdate("INSERT INTO reponse(intitule, id_question, is_juste) VALUES('" + r.getIntitule() + "', "+ id_question +", " + r.isJuste() + ")");
+			} catch (SQLException se) {
+				System.out.println("Erreur requête SQL : " + se.getMessage());
+			} finally {
+				try {
+					st.close();
+				}
+				catch (Exception e) {
+					System.out.println("charge : erreur close "+e.getMessage());
+				}
 			}
 		}
 	}

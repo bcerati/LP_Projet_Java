@@ -9,12 +9,14 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -38,7 +40,11 @@ public class AdminView extends JFrame implements AdminObservable {
 	private JTextField jR2;
 	private JTextField jR3;
 	private JTextField jR4;
+	private JComboBox boxEdit;
+
 	private JButton btnVal;
+	private JRadioButton juste1, juste2, juste3, juste4;
+	private ButtonGroup radioGroup;
 	
 	private JComboBox box;
 
@@ -125,6 +131,13 @@ public class AdminView extends JFrame implements AdminObservable {
 		jR2 = new JTextField();
 		jR3 = new JTextField();
 		jR4 = new JTextField();
+		boxEdit = new JComboBox();
+		boxEdit.addItem("Facile");
+		boxEdit.addItem("Moyen");
+		boxEdit.addItem("Difficile");
+
+		JPanel pQuestion= new JPanel();
+		pQuestion.setLayout(new BoxLayout(pQuestion, BoxLayout.LINE_AXIS));
 
 		JPanel pReponses1 = new JPanel();
 		pReponses1.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 15));
@@ -140,24 +153,51 @@ public class AdminView extends JFrame implements AdminObservable {
 		lblC.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 		lblD.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 		
+		pQuestion.add(jQuestion);
+		pQuestion.add(boxEdit);
+
+		radioGroup = new ButtonGroup();
+		juste1 = new JRadioButton();
+		juste2 = new JRadioButton();
+		juste3 = new JRadioButton();
+		juste4 = new JRadioButton();
+		
+		radioGroup.add(juste1);
+		radioGroup.add(juste2);
+		radioGroup.add(juste3);
+		radioGroup.add(juste4);
+		
 		pReponses1.add(lblA);
 		pReponses1.add(jR1);
+		pReponses1.add(juste1);
 		
 		pReponses1.add(lblB);
 		pReponses1.add(jR2);
-		
+		pReponses1.add(juste2);
+
 		pReponse2.add(lblC);
 		pReponse2.add(jR3);
+		pReponse2.add(juste3);
 
 		pReponse2.add(lblD);
 		pReponse2.add(jR4);
+		pReponse2.add(juste4);
 
-		p.add(jQuestion);
+		p.add(pQuestion);
 		p.add(pReponses1);
 		p.add(pReponse2);
 
 		btnVal = new JButton("Valider");
-		p.add(btnVal);
+		btnVal.setActionCommand("addOrEdit");
+		btnVal.addActionListener(controller);
+
+
+		JPanel pBtn = new JPanel();
+		pBtn.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+		pBtn.setLayout(new BoxLayout(pBtn, BoxLayout.LINE_AXIS));
+
+		pBtn.add(btnVal);
+		p.add(pBtn);
 		return p;
 	}
 
@@ -249,6 +289,34 @@ public class AdminView extends JFrame implements AdminObservable {
 
 	public Button getBtnDeleteQuestion() {
 		return btnDeleteQuestion;
+	}
+
+	public JRadioButton getJuste1() {
+		return juste1;
+	}
+
+	public JRadioButton getJuste2() {
+		return juste2;
+	}
+
+	public JRadioButton getJuste3() {
+		return juste3;
+	}
+
+	public JRadioButton getJuste4() {
+		return juste4;
+	}
+
+	public Button getBtnAddQuestion() {
+		return btnAddQuestion;
+	}
+
+	public JComboBox getBoxEdit() {
+		return boxEdit;
+	}
+
+	public ButtonGroup getRadioGroup() {
+		return radioGroup;
 	}
 
 	@Override
