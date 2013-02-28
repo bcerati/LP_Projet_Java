@@ -7,6 +7,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -22,7 +24,7 @@ import admin.models.AdminQuestionsModel;
 import admin.models.AdminResponsesModel;
 import admin.views.AdminView;
 
-public class AdminQuestionController implements ItemListener, MouseListener, ActionListener, ListSelectionListener {
+public class AdminQuestionController implements ItemListener, ActionListener, ListSelectionListener {
 
 	private AdminView view;
 	private AdminQuestionsModel questionsModel;
@@ -42,7 +44,7 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 		view.fillQuestions(questionsModel);
 		questionsModel.setData(QuestionDAO.getInstance().findALlByNiveau(niveau_regarde));
 		questionsModel.fireTableDataChanged();
-		
+
 		view.resizeQuestionsTable();
 	}
 
@@ -52,46 +54,17 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 			int state = e.getStateChange();
 			
 			if(state == ItemEvent.SELECTED) {
-			Object item = e.getItem();
-			
-			if(item.equals("Facile"))
-				niveau_regarde = 1;
-			else if(item.equals("Moyen"))
-				niveau_regarde = 2;
-			else
-				niveau_regarde = 3;
-
-			this.fillQuestionsTable();
+				Object item = e.getItem();
+				
+				if(item.equals("Facile"))
+					niveau_regarde = 1;
+				else if(item.equals("Moyen"))
+					niveau_regarde = 2;
+				else
+					niveau_regarde = 3;
+	
+				this.fillQuestionsTable();
 			}
-	}
-
-	public AdminQuestionsModel getQuestionsModel() {
-		return questionsModel;
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -105,39 +78,50 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 			view.getRadioGroup().clearSelection();
 		}
 
-		// On a validé l'ajout (ou la modification)
+		// On a validé l'ajout (ou la modification) d'une question
 		else if(actionCommand.equals("addOrEdit")) {
+			String strQ = view.getjQuestion().getText(), strR1 = view.getjR1().getText(), strR2 = view.getjR2().getText(), strR3 = view.getjR3().getText(), strR4 = view.getjR4().getText();
 
 			// Si tous les champs sont remplis
-			if(view.getjQuestion().getText().length() * view.getjR1().getText().length() * view.getjR2().getText().length() * view.getjR3().getText().length() * view.getjR4().getText().length() > 0) {
-				int id_question_autoselect = 0, niveau_select = 0; // pour savoir quelle question on devrait sélectionner à la fin de l'action (plutôt que de revenir tout en haut de la liste ...)
+			if(strQ.length() * strR1.length() * strR2.length() * strR3.length() * strR4.length() > 0 && (view.getRadioJuste1().isSelected() || view.getRadioJuste2().isSelected() || view.getRadioJuste3().isSelected() || view.getRadioJuste4().isSelected())) {
+				ArrayList<String> tmp = new ArrayList<String>();
+				tmp.add(strR1);
+				tmp.add(strR2);
+				tmp.add(strR3);
+				tmp.add(strR4);
+				Set<String> tmpSet = new TreeSet<String>();
+				tmpSet.addAll(tmp);
+
+				// Si il n'y a pas deux réponses identiques
+				if(tmpSet.size() == 4) {
+				
+				int id_question_autoselect = 0, niveau_select = 0; // pour savoir quelle question on devra sélectionner à la fin de l'action (plutôt que de revenir tout en haut de la liste ...)
 
 				// Modification de la question
-				if(view.getBtnVal().getText().equals("Modifier la question")) {
-					int row = view.getQuestionsTable().getSelectedRow();
-					Question q = questionsModel.getData().get(row);
+				if(view.getBtnValidGestion().getText().equals("Modifier la question")) {
+					Question q = questionsModel.getData().get(view.getQuestionsTable().getSelectedRow());
 					Reponse r1 = q.getReponses().get(0), r2 = q.getReponses().get(1), r3 = q.getReponses().get(2), r4 = q.getReponses().get(3);
 
-					q.setIntitule(view.getjQuestion().getText());
+					q.setIntitule(strQ);
 					q.setNiveau(view.getBoxEdit().getSelectedIndex() + 1);
 
-					r1.setIntitule(view.getjR1().getText());
-					r1.setJuste(view.getJuste1().isSelected());
+					r1.setIntitule(strR1);
+					r1.setJuste(view.getRadioJuste1().isSelected());
 					
-					r2.setIntitule(view.getjR2().getText());
-					r2.setJuste(view.getJuste2().isSelected());
+					r2.setIntitule(strR2);
+					r2.setJuste(view.getRadioJuste2().isSelected());
 
-					r3.setIntitule(view.getjR3().getText());
-					r3.setJuste(view.getJuste3().isSelected());
+					r3.setIntitule(strR3);
+					r3.setJuste(view.getRadioJuste3().isSelected());
 
-					r4.setIntitule(view.getjR4().getText());
-					r4.setJuste(view.getJuste4().isSelected());
+					r4.setIntitule(strR4);
+					r4.setJuste(view.getRadioJuste4().isSelected());
 					
 					QuestionDAO.getInstance().save(q);
 					id_question_autoselect = q.getId();
 					niveau_select = view.getBoxEdit().getSelectedIndex() + 1;
 				}
-				
+
 				// Ajout d'une nouvelle question
 				else {
 					Question q = new Question();
@@ -145,33 +129,34 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 
 					q.setIntitule(view.getjQuestion().getText());
 					q.setNiveau(view.getBoxEdit().getSelectedIndex() + 1);
+
 					ArrayList<Reponse> reponses = new ArrayList<Reponse>();
 					reponses.add(r1);
 					reponses.add(r2);
 					reponses.add(r3);
 					reponses.add(r4);
 					q.setReponses(reponses);
-					
+
 					r1.setIntitule(view.getjR1().getText());
-					r1.setJuste(view.getJuste1().isSelected());
-					
+					r1.setJuste(view.getRadioJuste1().isSelected());
+
 					r2.setIntitule(view.getjR2().getText());
-					r2.setJuste(view.getJuste2().isSelected());
+					r2.setJuste(view.getRadioJuste2().isSelected());
 
 					r3.setIntitule(view.getjR3().getText());
-					r3.setJuste(view.getJuste3().isSelected());
+					r3.setJuste(view.getRadioJuste3().isSelected());
 
 					r4.setIntitule(view.getjR4().getText());
-					r4.setJuste(view.getJuste4().isSelected());
-					
+					r4.setJuste(view.getRadioJuste4().isSelected());
+
 					id_question_autoselect = QuestionDAO.getInstance().save(q);
 					niveau_select = view.getBoxEdit().getSelectedIndex() + 1;
 				}
 
 				// On met à jour les données avec cette petite technique (jouer sur les évenements)
-				this.view.getBox().setSelectedIndex(0);
-				this.view.getBox().setSelectedIndex(1);
-				this.view.getBox().setSelectedIndex(niveau_select - 1);
+				this.view.getBoxNiveaux().setSelectedIndex(0);
+				this.view.getBoxNiveaux().setSelectedIndex(1);
+				this.view.getBoxNiveaux().setSelectedIndex(niveau_select - 1);
 
 				// Sélection de la bonne ligne dans les données
 				for(int i = 0 ; i < questionsModel.getData().size() ; i++) {
@@ -180,24 +165,25 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 						view.getQuestionsTable().getSelectionModel().addSelectionInterval(i, i);
 					}
 				}
-				
 			}
 			else
+				JOptionPane.showMessageDialog(view, "Il ne peut pas y avoir deux réponses identiques !", "Erreur", JOptionPane.ERROR_MESSAGE, null);
+		}
+			else
 				JOptionPane.showMessageDialog(view, "Vous devez remplir tous les champs !", "Erreur", JOptionPane.ERROR_MESSAGE, null);
-
 		}
 
 		else if(actionCommand.equals("delete_question")) {
-			
+
 			if(view.deleteConfirm() == JOptionPane.YES_OPTION) {
 				Question q = QuestionDAO.getInstance().findOneById(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
-				
+
 				if(q != null) {
 					QuestionDAO.getInstance().delete(q);
 					this.questionsModel.getData().remove(this.view.getQuestionsTable().getSelectedRow());
 					int actu = niveau_regarde;
-					this.view.getBox().setSelectedIndex(niveau_regarde % 2);
-					this.view.getBox().setSelectedIndex(actu - 1);
+					this.view.getBoxNiveaux().setSelectedIndex(niveau_regarde % 2);
+					this.view.getBoxNiveaux().setSelectedIndex(actu - 1);
 				}
 			}
 		}
@@ -215,18 +201,18 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 			view.getBoxEdit().setSelectedIndex(niveau_regarde - 1);
 			
 			view.getjR1().setText(q.getReponses().get(0).getIntitule());
-			view.getJuste1().setSelected((q.getReponses().get(0).isJuste()) ? true : false);
+			view.getRadioJuste1().setSelected((q.getReponses().get(0).isJuste()) ? true : false);
 
 			view.getjR2().setText(q.getReponses().get(1).getIntitule());
-			view.getJuste2().setSelected((q.getReponses().get(1).isJuste()) ? true : false);
+			view.getRadioJuste2().setSelected((q.getReponses().get(1).isJuste()) ? true : false);
 
 			view.getjR3().setText(q.getReponses().get(2).getIntitule());
-			view.getJuste3().setSelected((q.getReponses().get(2).isJuste()) ? true : false);
+			view.getRadioJuste3().setSelected((q.getReponses().get(2).isJuste()) ? true : false);
 
 			view.getjR4().setText(q.getReponses().get(3).getIntitule());
-			view.getJuste4().setSelected((q.getReponses().get(3).isJuste()) ? true : false);
+			view.getRadioJuste4().setSelected((q.getReponses().get(3).isJuste()) ? true : false);
 
-			view.getBtnVal().setText("Modifier la question");
+			view.getBtnValidGestion().setText("Modifier la question");
 			view.getBtnDeleteQuestion().setVisible(true);
 			view.getBtnAddQuestion().setVisible(true);
 
@@ -241,9 +227,8 @@ public class AdminQuestionController implements ItemListener, MouseListener, Act
 			view.getjR4().setText("");
 			view.getBtnAddQuestion().setVisible(false);
 			view.getBtnDeleteQuestion().setVisible(false);
-
-			view.getBtnVal().setText("Ajouter la nouvelle question");
+			view.getRadioGroup().clearSelection();
+			view.getBtnValidGestion().setText("Ajouter la nouvelle question");
 		}
-
 	}
 }

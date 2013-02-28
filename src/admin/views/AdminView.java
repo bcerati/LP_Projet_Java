@@ -2,7 +2,6 @@ package admin.views;
 
 import general_views.Button;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -21,9 +20,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import admin.ConnectionAdmin;
 import admin.controllers.AdminQuestionController;
 import admin.models.AdminQuestionsModel;
-import admin.models.AdminResponsesModel;
 import admin.views.AdminObservable;
 
 public class AdminView extends JFrame implements AdminObservable {
@@ -42,13 +41,16 @@ public class AdminView extends JFrame implements AdminObservable {
 	private JTextField jR4;
 	private JComboBox boxEdit;
 
-	private JButton btnVal;
-	private JRadioButton juste1, juste2, juste3, juste4;
+	private JButton btnValidGestion;
+	private JRadioButton radioJuste1, radioJuste2, radioJuste3, radioJuste4;
 	private ButtonGroup radioGroup;
 	
-	private JComboBox box;
+	private JComboBox boxNiveaux;
 
 	public AdminView() {
+
+		askPassword();
+
 		this.setTitle("Gestion des questions");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -57,7 +59,6 @@ public class AdminView extends JFrame implements AdminObservable {
 		buildGUI();
 
 		this.controller.fillQuestionsTable();
-
 		this.setSize(1000, 520);
 
 		resizeQuestionsTable();
@@ -66,6 +67,13 @@ public class AdminView extends JFrame implements AdminObservable {
 
 		this.setResizable(false);
 		this.setVisible(true);
+	}
+
+	private void askPassword() {
+		if(!ConnectionAdmin.getInstance().isPasswordCorrect(JOptionPane.showInputDialog("Espace ultra confidentiel, indiquer le mot de passe pour entrer :"))) {
+			JOptionPane.showMessageDialog(this, "Le mot de passe entré est incorrect !", "Mot de passe erroné !", JOptionPane.ERROR_MESSAGE);		
+			System.exit(0);
+		}
 	}
 
 	/*
@@ -91,21 +99,22 @@ public class AdminView extends JFrame implements AdminObservable {
 	}
 
 	/*
-	 * Construction du panel qui comporte la liste de tous les boutons
+	 * Construction du panel qui comporte la box des niveaux ainsi qu'un label
 	 */
 	public JPanel buildTopPanel() {
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.LINE_AXIS));
 
 		JPanel left = new JPanel();
-		box = new JComboBox();
-		box.addItemListener(controller);
 
-		box.addItem("Facile");
-		box.addItem("Moyen");
-		box.addItem("Difficile");
+		boxNiveaux = new JComboBox();
+		boxNiveaux.addItemListener(controller);
+		boxNiveaux.addItem("Facile");
+		boxNiveaux.addItem("Moyen");
+		boxNiveaux.addItem("Difficile");
+
 		left.add(new JLabel("Niveau : "));
-		left.add(box);
+		left.add(boxNiveaux);
 		
 		JPanel right = new JPanel();
 		right.setPreferredSize(new Dimension(700, 20));
@@ -119,7 +128,7 @@ public class AdminView extends JFrame implements AdminObservable {
 
 		return p;
 	}
-	
+
 	public JPanel buildFormPanel() {
 		JPanel p = new JPanel();
 		p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createTitledBorder("Gestion de la question")));
@@ -128,9 +137,17 @@ public class AdminView extends JFrame implements AdminObservable {
 		jQuestion = new JTextField();
 		
 		jR1 = new JTextField();
+		jR1.setPreferredSize(new Dimension(jR1.getWidth(), jR1.getHeight()));
+		
 		jR2 = new JTextField();
+		jR2.setPreferredSize(new Dimension(jR2.getWidth(), jR2.getHeight()));
+		
 		jR3 = new JTextField();
+		jR3.setPreferredSize(new Dimension(jR3.getWidth(), jR3.getHeight()));
+
 		jR4 = new JTextField();
+		jR4.setPreferredSize(new Dimension(jR4.getWidth(), jR4.getHeight()));
+
 		boxEdit = new JComboBox();
 		boxEdit.addItem("Facile");
 		boxEdit.addItem("Moyen");
@@ -138,13 +155,14 @@ public class AdminView extends JFrame implements AdminObservable {
 
 		JPanel pQuestion= new JPanel();
 		pQuestion.setLayout(new BoxLayout(pQuestion, BoxLayout.LINE_AXIS));
+		pQuestion.add(jQuestion);
+		pQuestion.add(boxEdit);
 
 		JPanel pReponses1 = new JPanel();
-		pReponses1.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 15));
 		pReponses1.setLayout(new BoxLayout(pReponses1, BoxLayout.LINE_AXIS));
+		pReponses1.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 		
 		JPanel pReponse2 = new JPanel();
-		pReponse2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 15));
 		pReponse2.setLayout(new BoxLayout(pReponse2, BoxLayout.LINE_AXIS));
 
 		JLabel lblA = new JLabel("A."), lblB = new JLabel("B."), lblC = new JLabel("C."), lblD = new JLabel("D.");
@@ -152,51 +170,47 @@ public class AdminView extends JFrame implements AdminObservable {
 		lblB.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 		lblC.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
 		lblD.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 0));
-		
-		pQuestion.add(jQuestion);
-		pQuestion.add(boxEdit);
 
 		radioGroup = new ButtonGroup();
-		juste1 = new JRadioButton();
-		juste2 = new JRadioButton();
-		juste3 = new JRadioButton();
-		juste4 = new JRadioButton();
+		radioJuste1 = new JRadioButton();
+		radioJuste2 = new JRadioButton();
+		radioJuste3 = new JRadioButton();
+		radioJuste4 = new JRadioButton();
 		
-		radioGroup.add(juste1);
-		radioGroup.add(juste2);
-		radioGroup.add(juste3);
-		radioGroup.add(juste4);
+		radioGroup.add(radioJuste1);
+		radioGroup.add(radioJuste2);
+		radioGroup.add(radioJuste3);
+		radioGroup.add(radioJuste4);
 		
 		pReponses1.add(lblA);
 		pReponses1.add(jR1);
-		pReponses1.add(juste1);
+		pReponses1.add(radioJuste1);
 		
 		pReponses1.add(lblB);
 		pReponses1.add(jR2);
-		pReponses1.add(juste2);
+		pReponses1.add(radioJuste2);
 
 		pReponse2.add(lblC);
 		pReponse2.add(jR3);
-		pReponse2.add(juste3);
+		pReponse2.add(radioJuste3);
 
 		pReponse2.add(lblD);
 		pReponse2.add(jR4);
-		pReponse2.add(juste4);
+		pReponse2.add(radioJuste4);
 
 		p.add(pQuestion);
 		p.add(pReponses1);
 		p.add(pReponse2);
 
-		btnVal = new JButton("Valider");
-		btnVal.setActionCommand("addOrEdit");
-		btnVal.addActionListener(controller);
-
+		btnValidGestion = new JButton("Valider");
+		btnValidGestion.setActionCommand("addOrEdit");
+		btnValidGestion.addActionListener(controller);
 
 		JPanel pBtn = new JPanel();
 		pBtn.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
 		pBtn.setLayout(new BoxLayout(pBtn, BoxLayout.LINE_AXIS));
 
-		pBtn.add(btnVal);
+		pBtn.add(btnValidGestion);
 		p.add(pBtn);
 		return p;
 	}
@@ -235,11 +249,9 @@ public class AdminView extends JFrame implements AdminObservable {
 		btnQuestions.add(new JPanel());
 		btnQuestions.add(new JPanel());
 
-
 		p.add(scrollPane);
 		p.add(btnQuestions);
 		return p;
-
 	}
 
 	/*
@@ -248,7 +260,6 @@ public class AdminView extends JFrame implements AdminObservable {
 	public void resizeQuestionsTable() {
 		questionsTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		questionsTable.getColumnModel().getColumn(0).setPreferredWidth(850);
-		questionsTable.getSelectionModel().addSelectionInterval(0, 0);
 	}
 
 	public JTable getQuestionsTable() {
@@ -259,8 +270,8 @@ public class AdminView extends JFrame implements AdminObservable {
 		this.questionsTable = questionsTable;
 	}
 
-	public JComboBox getBox() {
-		return box;
+	public JComboBox getBoxNiveaux() {
+		return boxNiveaux;
 	}
 
 	public JTextField getjQuestion() {
@@ -283,28 +294,28 @@ public class AdminView extends JFrame implements AdminObservable {
 		return jR4;
 	}
 	
-	public JButton getBtnVal() {
-		return btnVal;
+	public JButton getBtnValidGestion() {
+		return btnValidGestion;
 	}
 
 	public Button getBtnDeleteQuestion() {
 		return btnDeleteQuestion;
 	}
 
-	public JRadioButton getJuste1() {
-		return juste1;
+	public JRadioButton getRadioJuste1() {
+		return radioJuste1;
 	}
 
-	public JRadioButton getJuste2() {
-		return juste2;
+	public JRadioButton getRadioJuste2() {
+		return radioJuste2;
 	}
 
-	public JRadioButton getJuste3() {
-		return juste3;
+	public JRadioButton getRadioJuste3() {
+		return radioJuste3;
 	}
 
-	public JRadioButton getJuste4() {
-		return juste4;
+	public JRadioButton getRadioJuste4() {
+		return radioJuste4;
 	}
 
 	public Button getBtnAddQuestion() {

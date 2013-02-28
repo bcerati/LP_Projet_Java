@@ -33,7 +33,7 @@ public class QuestionDAO {
 		Vector<Question> v = new Vector<Question>();
 
 		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
-		String reqQuestions = "SELECT * FROM question WHERE niveau=" + niv + " ORDER BY id_question";
+		String reqQuestions = "SELECT * FROM question WHERE niveau=" + niv + " ORDER BY intitule";
 
 		Statement st = null;
 		ResultSet res= null;
