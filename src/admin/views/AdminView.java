@@ -13,6 +13,9 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -55,6 +58,31 @@ public class AdminView extends JFrame implements AdminObservable {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.controller = new AdminQuestionController(this);
+
+		JMenuBar menuBar = new JMenuBar();
+		this.setJMenuBar(menuBar);
+
+		JMenu menuFile = new JMenu("Fichier");
+		menuBar.add(menuFile);
+
+		JMenu menuStats = new JMenu("Statistiques");
+		menuFile.add(menuStats);
+
+		JMenuItem itemStatsSums = new JMenuItem("Candidats gagnats par somme");
+		itemStatsSums.setActionCommand("statsSums");
+		itemStatsSums.addActionListener(controller);
+		menuStats.add(itemStatsSums);
+
+		JMenuItem itemStatsQuestions = new JMenuItem("Réponses données par question");
+		itemStatsQuestions.setActionCommand("statsQuestions");
+		itemStatsQuestions.addActionListener(controller);
+		menuStats.add(itemStatsQuestions);
+
+		menuFile.addSeparator();
+
+		JMenuItem itemQuit = new JMenuItem("Quitter");
+		itemQuit.addActionListener(controller);
+		menuFile.add(itemQuit);
 
 		buildGUI();
 

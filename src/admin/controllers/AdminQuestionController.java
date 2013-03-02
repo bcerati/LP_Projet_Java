@@ -71,6 +71,17 @@ public class AdminQuestionController implements ItemListener, ActionListener, Li
 	public void actionPerformed(ActionEvent e) {
 	String actionCommand = e.getActionCommand();
 	
+		if(actionCommand.equals("Quitter"))
+			System.exit(0);
+		
+		if(actionCommand.equals("statsSums")) {
+			System.out.println("Stats sums !");
+		}
+
+		if(actionCommand.equals("statsQuestions")) {
+			System.out.println("Stats questions !");
+		}
+
 		// On a appuyé sur le bouton "ajouter une question"
 		if(actionCommand.equals("add_question")) {
 			view.getQuestionsTable().getSelectionModel().removeSelectionInterval(0,view.getQuestionsTable().getModel().getRowCount());
