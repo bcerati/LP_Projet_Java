@@ -190,11 +190,16 @@ public class AdminQuestionController implements ItemListener, ActionListener, Li
 				Question q = QuestionDAO.getInstance().findOneById(questionsModel.getData().get(this.view.getQuestionsTable().getSelectedRow()).getId());
 
 				if(q != null) {
-					QuestionDAO.getInstance().delete(q);
-					this.questionsModel.getData().remove(this.view.getQuestionsTable().getSelectedRow());
-					int actu = niveau_regarde;
-					this.view.getBoxNiveaux().setSelectedIndex(niveau_regarde % 2);
-					this.view.getBoxNiveaux().setSelectedIndex(actu - 1);
+					
+					if(!QuestionDAO.getInstance().isAlreadyAsked(q)) {
+						QuestionDAO.getInstance().delete(q);
+						this.questionsModel.getData().remove(this.view.getQuestionsTable().getSelectedRow());
+						int actu = niveau_regarde;
+						this.view.getBoxNiveaux().setSelectedIndex(niveau_regarde % 2);
+						this.view.getBoxNiveaux().setSelectedIndex(actu - 1);
+					}
+					else
+						JOptionPane.showMessageDialog(view, "Question déjà posée, vous ne pouvez plus la supprimer !", "Erreur", JOptionPane.ERROR_MESSAGE, null);
 				}
 			}
 		}
@@ -224,7 +229,12 @@ public class AdminQuestionController implements ItemListener, ActionListener, Li
 			view.getRadioJuste4().setSelected((q.getReponses().get(3).isJuste()) ? true : false);
 
 			view.getBtnValidGestion().setText("Modifier la question");
-			view.getBtnDeleteQuestion().setVisible(true);
+			
+			if(!QuestionDAO.getInstance().isAlreadyAsked(q))
+				view.getBtnDeleteQuestion().setVisible(true);
+			else
+				
+				view.getBtnDeleteQuestion().setVisible(false);
 			view.getBtnAddQuestion().setVisible(true);
 
 		}

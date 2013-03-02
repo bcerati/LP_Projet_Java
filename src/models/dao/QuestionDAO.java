@@ -120,6 +120,33 @@ public class QuestionDAO {
 		return q;
 	}
 	
+	public boolean isAlreadyAsked(Question q) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+		Statement st = null;
+		ResultSet rs = null;
+		int nb = 1;
+
+		try {
+			st = (Statement) co.createStatement();
+			rs = st.executeQuery("SELECT COUNT(*) AS nb FROM joueur_reponse WHERE id_question=" + q.getId());
+			rs.next();
+			nb = rs.getInt("nb");
+			
+		} catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		} finally {
+			try {
+				rs.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+		return nb > 0;
+	}
+
 	public void delete(Question q) {
 
 		// Suppression de la question
