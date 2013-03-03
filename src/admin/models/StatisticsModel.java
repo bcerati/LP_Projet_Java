@@ -1,20 +1,21 @@
 package admin.models;
 
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StatisticsModel {
 
-	private Vector<Double> data;
+	private Map<String, Double> data;
 
 	public StatisticsModel() {
-		data = new Vector<Double>();
+		data = new HashMap<String, Double>();
 	}
 
-	public Vector<Double> getData() {
+	public Map<String, Double> getData() {
 		return data;
 	}
 
-	public void setData(Vector<Double> data) {
+	public void setData(Map<String, Double> data) {
 		this.data = data;
 	}
 

@@ -17,12 +17,15 @@ import javax.swing.event.ListSelectionListener;
 
 import models.dao.QuestionDAO;
 import models.dao.ReponseDAO;
+import models.dao.SommeDAO;
 import models.metier.Question;
 import models.metier.Reponse;
 
 import admin.models.AdminQuestionsModel;
 import admin.models.AdminResponsesModel;
+import admin.models.StatisticsModel;
 import admin.views.AdminView;
+import admin.views.StatisticsView;
 
 public class AdminQuestionController implements ItemListener, ActionListener, ListSelectionListener {
 
@@ -75,7 +78,9 @@ public class AdminQuestionController implements ItemListener, ActionListener, Li
 			System.exit(0);
 		
 		if(actionCommand.equals("statsSums")) {
-			System.out.println("Stats sums !");
+			StatisticsModel model = new StatisticsModel();
+			model.setData(SommeDAO.getInstance().getSommesStat());
+			StatisticsView.sumStats(model, "Pourcentage des joueurs par somme");
 		}
 
 		if(actionCommand.equals("statsQuestions")) {
