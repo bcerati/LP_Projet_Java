@@ -64,5 +64,9 @@ public class SommeDAO {
 		}
 		return m;
 	}
+	
+	public HashMap<String, Double> getQuestionStat(Question q) {
+		return null;
+	}
 
 }

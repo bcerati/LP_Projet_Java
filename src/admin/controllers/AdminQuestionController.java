@@ -84,13 +84,17 @@ public class AdminQuestionController implements ItemListener, ActionListener, Li
 		}
 
 		if(actionCommand.equals("statsQuestions")) {
-			System.out.println("Stats questions !");
+			Question q = questionsModel.getData().get(view.getQuestionsTable().getSelectedRow());
+			StatisticsModel model = new StatisticsModel();
+			model.setData(SommeDAO.getInstance().getQuestionStat(q));
+			StatisticsView.questionStats(model, q.getIntitule());
 		}
 
 		// On a appuyé sur le bouton "ajouter une question"
 		if(actionCommand.equals("add_question")) {
 			view.getQuestionsTable().getSelectionModel().removeSelectionInterval(0,view.getQuestionsTable().getModel().getRowCount());
 			view.getBtnDeleteQuestion().setVisible(false);
+			view.getBtnStatsQuestion().setVisible(false);
 			view.getRadioGroup().clearSelection();
 		}
 
@@ -235,11 +239,14 @@ public class AdminQuestionController implements ItemListener, ActionListener, Li
 
 			view.getBtnValidGestion().setText("Modifier la question");
 			
-			if(!QuestionDAO.getInstance().isAlreadyAsked(q))
+			if(!QuestionDAO.getInstance().isAlreadyAsked(q)) {
 				view.getBtnDeleteQuestion().setVisible(true);
-			else
-				
+				view.getBtnStatsQuestion().setVisible(false);
+			}
+			else {
 				view.getBtnDeleteQuestion().setVisible(false);
+				view.getBtnStatsQuestion().setVisible(true);
+			}
 			view.getBtnAddQuestion().setVisible(true);
 
 		}

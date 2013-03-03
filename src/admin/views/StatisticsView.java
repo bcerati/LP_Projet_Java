@@ -39,5 +39,9 @@ public class StatisticsView {
 	    frame.pack();
 	    frame.setVisible(true);
 	}
+
+	public static void questionStats(StatisticsModel model, String intitule) {
+		System.out.println("TODO");
+	}
 	
 }

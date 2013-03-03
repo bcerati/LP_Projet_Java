@@ -36,6 +36,7 @@ public class AdminView extends JFrame implements AdminObservable {
 	
 	private Button btnAddQuestion;
 	private Button btnDeleteQuestion;
+	private Button btnStatsQuestion;
 	
 	private JTextField jQuestion;
 	private JTextField jR1;
@@ -72,11 +73,6 @@ public class AdminView extends JFrame implements AdminObservable {
 		itemStatsSums.setActionCommand("statsSums");
 		itemStatsSums.addActionListener(controller);
 		menuStats.add(itemStatsSums);
-
-		JMenuItem itemStatsQuestions = new JMenuItem("Réponses données par question");
-		itemStatsQuestions.setActionCommand("statsQuestions");
-		itemStatsQuestions.addActionListener(controller);
-		menuStats.add(itemStatsQuestions);
 
 		menuFile.addSeparator();
 
@@ -270,11 +266,16 @@ public class AdminView extends JFrame implements AdminObservable {
 		btnDeleteQuestion.addActionListener(controller);
 		btnDeleteQuestion.setVisible(false);
 
+		btnStatsQuestion = new Button("statsQuestion.png", 216, 34);
+		btnStatsQuestion.setActionCommand("statsQuestions");
+		btnStatsQuestion.addActionListener(controller);
+		btnStatsQuestion.setVisible(false);
+
 		btnQuestions.add(new JPanel());
 		btnQuestions.add(new JPanel());
+		btnQuestions.add(btnStatsQuestion);
 		btnQuestions.add(btnAddQuestion);
 		btnQuestions.add(btnDeleteQuestion);
-		btnQuestions.add(new JPanel());
 		btnQuestions.add(new JPanel());
 
 		p.add(scrollPane);
@@ -356,6 +357,10 @@ public class AdminView extends JFrame implements AdminObservable {
 
 	public ButtonGroup getRadioGroup() {
 		return radioGroup;
+	}
+
+	public Button getBtnStatsQuestion() {
+		return btnStatsQuestion;
 	}
 
 	@Override
