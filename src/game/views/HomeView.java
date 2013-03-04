@@ -4,6 +4,8 @@ import game.controllers.HomeController;
 import general_views.Button;
 import general_views.Panel;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -32,6 +34,11 @@ public class HomeView extends JFrame {
 	 * Bouton qui quitera le jeu
 	 */
 	private Button quit;
+	
+	/*
+	 * Pour jouer du son
+	 */
+	private AudioClip audioClip = null;
 
 	private HomeController controller;
 
@@ -41,12 +48,15 @@ public class HomeView extends JFrame {
 
 		controller = new HomeController(this);
 		int caseWidth = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
+		audioClip = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/home.wav"));
+		audioClip.play();
 
 		buildGUI();
 
 		this.setSize(10 * caseWidth, 8 * caseHeight);
 		this.setContentPane(homePanel);
 		this.setVisible(true);
+		setHomeListeners();
 	}
 
 	/*
@@ -75,17 +85,15 @@ public class HomeView extends JFrame {
 		int caseWidth = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
 
 		rules = new Button("regles_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
-		rules.addActionListener(new HomeController(this));
 		rules.setActionCommand("rules");
 
 		newGame = new Button("jouer_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
-		newGame.addActionListener(new HomeController(this));
+
 		newGame.setActionCommand("newGame");
 
 		quit = new Button("quitter_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
-		quit.addActionListener(new HomeController(this));
 		quit.setActionCommand("quit");
-		
+
 		options.add(rules);
 		options.add(newGame);
 		options.add(quit);
@@ -95,4 +103,15 @@ public class HomeView extends JFrame {
 	public void showRules() {
 		JOptionPane.showMessageDialog(this, "Ici les règles !");
 	}
+
+	public AudioClip getAudioClip() {
+		return audioClip;
+	}
+	
+	public void setHomeListeners() {
+		rules.addActionListener(new HomeController(this));
+		newGame.addActionListener(new HomeController(this));
+		quit.addActionListener(new HomeController(this));
+	}
+	
 }

@@ -37,7 +37,10 @@ public class HomeController implements ActionListener {
 			((HomeView)view).showRules();
 		if(actionCommand.equals("newGame")) {
 			view.setVisible(false);
+			HomeView tmp = (HomeView) view;
 			view = new GameView();
+			tmp.getAudioClip().stop();
+
 		}
 	}
 }
