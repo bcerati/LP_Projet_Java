@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
 import models.metier.Question;
@@ -67,12 +68,16 @@ public class ReponseDAO {
 			
 			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
 
-			Statement st = null;
+			PreparedStatement st = null;
 
 			try {
-				st = (Statement) co.createStatement();
-				st.executeUpdate("UPDATE reponse SET intitule='" + r.getIntitule() + "', is_juste=" + r.isJuste() + " WHERE id_reponse=" + r.getId());
-				
+				st = (PreparedStatement) co.prepareStatement("UPDATE reponse SET intitule=?, is_juste=? WHERE id_reponse=?");
+
+				st.setString(1, r.getIntitule());
+				st.setBoolean(2, r.isJuste());
+				st.setInt(3, r.getId());
+				st.executeUpdate();
+
 			} catch (SQLException se) {
 				System.out.println("Erreur requête SQL : " + se.getMessage());
 			} finally {
