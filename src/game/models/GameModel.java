@@ -1,5 +1,10 @@
 package game.models;
 
+import java.util.Vector;
+
+import models.metier.Joueur;
+import models.metier.Question;
+
 public class GameModel {
 
 	/*
@@ -8,11 +13,26 @@ public class GameModel {
 	private int caseWidth;
 	private int caseHeight;
 
-	private String pseudo;
+	private Joueur joueur;
+	
+	private int current_level;
+	
+	private Vector<Question> questions;
+	private int questionNb;
+	
+	private boolean isCoupDeFil;
+	private boolean is5050;
+	private boolean isAmis;
+	private boolean isSwitch;
 
 	public GameModel(int w, int h) {
 		setCaseWidth(w);
 		setCaseHeight(h);
+		questionNb = 1;
+		isCoupDeFil = false;
+		is5050 = false;
+		isAmis = false;
+		isSwitch = false;
 	}
 
 	public GameModel() {
@@ -35,11 +55,67 @@ public class GameModel {
 		this.caseHeight = caseHeight;
 	}
 
-	public String getPseudo() {
-		return pseudo;
+	public Joueur getJoueur() {
+		return joueur;
 	}
 
-	public void setPseudo(String pseudo) {
-		this.pseudo = pseudo;
+	public void setJoueur(Joueur joueur) {
+		this.joueur = joueur;
+	}
+
+	public int getCurrent_level() {
+		return current_level;
+	}
+
+	public void setCurrent_level(int current_level) {
+		this.current_level = current_level;
+	}
+
+	public Vector<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(Vector<Question> questions) {
+		this.questions = questions;
+	}
+
+	public int getQuestionNb() {
+		return questionNb;
+	}
+
+	public void setQuestionNb(int questionNb) {
+		this.questionNb = questionNb;
+	}
+
+	public boolean isCoupDeFil() {
+		return isCoupDeFil;
+	}
+
+	public void setCoupDeFil(boolean isCoupDeFil) {
+		this.isCoupDeFil = isCoupDeFil;
+	}
+
+	public boolean isIs5050() {
+		return is5050;
+	}
+
+	public void setIs5050(boolean is5050) {
+		this.is5050 = is5050;
+	}
+
+	public boolean isAmis() {
+		return isAmis;
+	}
+
+	public void setAmis(boolean isAmis) {
+		this.isAmis = isAmis;
+	}
+
+	public boolean isSwitch() {
+		return isSwitch;
+	}
+
+	public void setSwitch(boolean isSwitch) {
+		this.isSwitch = isSwitch;
 	}
 }

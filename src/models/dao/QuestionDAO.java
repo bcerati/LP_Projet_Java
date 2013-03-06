@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Random;
 import java.util.Vector;
 
 import com.mysql.jdbc.Connection;
@@ -239,5 +240,90 @@ public class QuestionDAO {
 			return id;
 		}
 	}
+
+	
+	
+	
+	/**
+	 * Fonction permettant de trouver un 6 id de questions aléatoirement selon le niveau
+	 * 
+	 * @param Le niveau
+	 * @return Une ArrayList de 6 id de questions choisis aléatoirement
+	 */
+	public ArrayList<Integer> findSixRandomIdByNiveau(int niveau) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		String reqIdByNiveau = "SELECT id_question FROM question WHERE niveau=" + niveau;
+
+		Statement st = null;
+		ResultSet res= null;
+		ArrayList<Integer> sixIdQuestionByNiveau = new ArrayList<Integer>();
+
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqIdByNiveau);
+			
+			ArrayList<Integer> idQuestionByNiveau = new ArrayList<Integer>();
+			while (res.next()) {
+				idQuestionByNiveau.add(res.getInt("id_question")); 
+			}
+			
+			for (int x = 0; x < 6; x++) {
+				int nbId = idQuestionByNiveau.size();
+				int randomIndex = new Random().nextInt(nbId+1);
+				int randomId = idQuestionByNiveau.get(randomIndex);
+				/**
+				 * 
+				 * 
+				 * 
+				 * 
+				 * 
+				 * ERROR
+				 * 
+				 * 
+				 * 
+				 * 
+				 * 
+				 * 
+				 * 
+				 * 
+				 */
+				
+				sixIdQuestionByNiveau.add(randomId);
+				idQuestionByNiveau.remove(randomIndex);
+			}
+		}
+		catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		}
+		finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close " + e.getMessage());
+			}
+		}
+		
+		return sixIdQuestionByNiveau;
+	}
+
+	/**
+	 * Fonction permettant de trouver six questions aléatoirement en fonction du niveau
+	 * 
+	 * @param Le niveau
+	 * @return Un vecteur avec six questions choisies aléatoirement
+	 */
+	public Vector<Question> findSixRandomByNiveau(int niveau) {
+		ArrayList<Integer> sixIdQuestionsByNiveau = findSixRandomIdByNiveau(niveau);
+		Vector<Question> sixRandomQuestions = new Vector<Question>();
+		for (int x=0; x < sixIdQuestionsByNiveau.size(); x++) {
+			Question question = findOneById(sixIdQuestionsByNiveau.get(x));
+			sixRandomQuestions.add(question);
+		}
+		
+		return sixRandomQuestions;
+	}
+
 
 }

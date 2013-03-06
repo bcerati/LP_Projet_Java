@@ -4,8 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -16,13 +14,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import models.dao.QuestionDAO;
-import models.dao.ReponseDAO;
 import models.dao.SommeDAO;
 import models.metier.Question;
 import models.metier.Reponse;
 
 import admin.models.AdminQuestionsModel;
-import admin.models.AdminResponsesModel;
 import admin.models.StatisticsModel;
 import admin.views.AdminView;
 import admin.views.StatisticsView;
