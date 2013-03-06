@@ -269,24 +269,8 @@ public class QuestionDAO {
 			
 			for (int x = 0; x < 6; x++) {
 				int nbId = idQuestionByNiveau.size();
-				int randomIndex = new Random().nextInt(nbId+1);
+				int randomIndex = new Random().nextInt(nbId);
 				int randomId = idQuestionByNiveau.get(randomIndex);
-				/**
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * ERROR
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 */
 				
 				sixIdQuestionByNiveau.add(randomId);
 				idQuestionByNiveau.remove(randomIndex);

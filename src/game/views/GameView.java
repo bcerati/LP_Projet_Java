@@ -32,6 +32,7 @@ public class GameView extends JFrame {
 	private Panel questionPanel;
 
 	// Boutons des réponses proposées à la question posée
+	private JPanel panelResponses;
 	private Button btnRespA;
 	private Button btnRespB;
 	private Button btnRespC;
@@ -99,8 +100,8 @@ public class GameView extends JFrame {
 		Panel panelLogo = new Panel("logo.png", 5 * caseWidht, 5 * caseHeight);
 
 		// Panel de la pyramide des gains
-		Panel panelPyramide = new Panel("pyramide.png", 4 * caseWidht, 5 * caseHeight);
-		
+		Panel panelPyramide = new Panel("pyramide_palier1.png", 4 * caseWidht, 5 * caseHeight);
+
 		// Remplissage du panel du haut (qui possède un layout en LINE_AXIS (= de gauche à droite))
 		panelTop.add(panelJokers);
 		panelTop.add(panelLogo);
@@ -121,21 +122,29 @@ public class GameView extends JFrame {
 		int caseWidht = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
 
 		// Panel des 4 réponses
-		JPanel panelResponses = new JPanel(new GridLayout(2, 2));
+		panelResponses = new JPanel(new GridLayout(2, 2));
 		panelResponses.setPreferredSize(new Dimension(10 * caseWidht, 2 * caseHeight));
 		
-		btnRespA = new Button("reponse_haut_gauche.png", 5 * caseWidht, caseHeight);
+		btnRespA = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespA.setActionCommand("A");
+		btnRespA.addActionListener(controller);
 		panelResponses.add(btnRespA);
 
-		btnRespB = new Button("reponse_haut_droit.png", 5 * caseWidht, caseHeight);
+		btnRespB = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespB.setActionCommand("B");
+		btnRespB.addActionListener(controller);
 		panelResponses.add(btnRespB);
 
-		btnRespC = new Button("reponse_bas_gauche.png", 5 * caseWidht, caseHeight);
+		btnRespC = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespC.setActionCommand("C");
+		btnRespC.addActionListener(controller);
 		panelResponses.add(btnRespC);
 
-		btnRespD = new Button("reponse_bas_droit.png", 5 * caseWidht, caseHeight);
+		btnRespD = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespD.setActionCommand("D");
+		btnRespD.addActionListener(controller);
 		panelResponses.add(btnRespD);
-		
+
 		return panelResponses;
 	}
 
@@ -186,4 +195,46 @@ public class GameView extends JFrame {
 		btnRespD.add(lbl);
 	}
 
+	public Button getBtnRespA() {
+		return btnRespA;
+	}
+
+	public void setBtnRespA(Button btnRespA) {
+		this.btnRespA = btnRespA;
+	}
+
+	public Button getBtnRespB() {
+		return btnRespB;
+	}
+
+	public void setBtnRespB(Button btnRespB) {
+		this.btnRespB = btnRespB;
+	}
+
+	public Button getBtnRespC() {
+		return btnRespC;
+	}
+
+	public void setBtnRespC(Button btnRespC) {
+		this.btnRespC = btnRespC;
+	}
+
+	public Button getBtnRespD() {
+		return btnRespD;
+	}
+
+	public void setBtnRespD(Button btnRespD) {
+		this.btnRespD = btnRespD;
+	}
+
+	public void switchSelect() {
+		panelResponses.remove(0);
+		btnRespA = new Button("question_select.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
+		btnRespA.setActionCommand("A");
+		btnRespA.addActionListener(controller);
+		System.out.println("ok");
+		panelResponses.add(btnRespA, 0);
+		this.repaint();
+		this.validate();
+	}
 }

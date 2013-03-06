@@ -2,6 +2,7 @@ package game.controllers;
 
 import game.models.GameModel;
 import game.views.GameView;
+import general_views.Button;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -60,6 +61,12 @@ public class GameController implements ActionListener {
 		if(actionCommand.equals("quitWhitoutSaving")) {
 			if(JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment quitter ?", "Voulez-vous vraiment quitter ?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
 				System.exit(0);
+		}
+		
+		// On clique sur la réponse A
+		else if(actionCommand.equals("A")) {
+			gameView.switchSelect();
+			
 		}
 	}
 
