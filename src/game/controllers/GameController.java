@@ -3,19 +3,18 @@ package game.controllers;
 import game.models.GameModel;
 import game.views.GameView;
 import general_views.Button;
+import general_views.Dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.Vector;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.View;
 
 import models.dao.JoueurDAO;
 import models.dao.QuestionDAO;
+import models.dao.ReponseDAO;
 import models.metier.Joueur;
 import models.metier.Question;
 import models.metier.Reponse;
@@ -45,11 +44,12 @@ public class GameController implements ActionListener {
 		// Création du joueur
 		Joueur j = new Joueur(0, this.gameView.askPseudo());
 		getModel().setJoueur(j);
-		JoueurDAO.getInstance().save(j);
+		j.setId(JoueurDAO.getInstance().save(j));
 
-		getModel().setCurrent_level(1);
+		getModel().setCurrentLevel(1);
 		getModel().setQuestions(QuestionDAO.getInstance().findSixRandomByNiveau(1));
 
+		gameView.clearAnswerPanels();
 		gameView.writeQuestion();
 		gameView.getBackgroundSound().loop();
 	}
@@ -59,7 +59,8 @@ public class GameController implements ActionListener {
 		final String actionCommand = e.getActionCommand();
 		
 		if(actionCommand.equals("quitWhitoutSaving")) {
-			if(JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment quitter ?", "Voulez-vous vraiment quitter ?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+			Dialog.confirmDialog(gameView, "Quitter le jeu", true, "Voulez-vous vraiment quitter ?");
+			if(Dialog.reponse)
 				System.exit(0);
 		}
 		
@@ -67,7 +68,19 @@ public class GameController implements ActionListener {
 		else if(actionCommand.equals("A") || actionCommand.equals("B") || actionCommand.equals("C") || actionCommand.equals("D")) {
 			
 			if(askFinalAnswer()) {
-	      	  gameView.switchToSelected(actionCommand); // On sélectionne la réponse choisie (en orrange)
+				Question currentQuestion = model.getQuestions().get(model.getQuestionNb() - 1);
+				Reponse currentRep = null;
+				if(actionCommand.equals("A"))
+					currentRep = currentQuestion.getReponses().get(0);
+				else if(actionCommand.equals("B"))
+					currentRep = currentQuestion.getReponses().get(1);
+				else if(actionCommand.equals("C"))
+					currentRep = currentQuestion.getReponses().get(2);
+				else
+					currentRep = currentQuestion.getReponses().get(3);
+				
+				ReponseDAO.getInstance().putPlayerResponse(model.getJoueur(), currentQuestion, currentRep);
+				gameView.switchToSelected(actionCommand); // On sélectionne la réponse choisie (en orrange)
 
 	      	  // On démarre une nouveau Thread pour faire patienter un peu (suspens toussa)
 	      	  	new Thread(new Runnable() {
@@ -94,7 +107,7 @@ public class GameController implements ActionListener {
 	}
 	
 	private boolean askFinalAnswer() {
-		if(gameView.showAskFinalAnswer("C'est votre dernier mot ?") == JOptionPane.YES_OPTION)
+		if(gameView.showAskFinalAnswer("C'est votre dernier mot ?") == 1)
 			return true;
 		else
 			return false;
@@ -148,7 +161,49 @@ public class GameController implements ActionListener {
   	  				public void run() {
   	  					try {
   	  						Thread.sleep(1000);
-      	  					System.out.println("NEEEEEEEEEEEEEEXT!");
+
+  	  						// Changement de palier
+  	  						if(model.getQuestionNbPyramid() % 5 == 0) {
+  	  							
+	  	  						new Thread(new Runnable() {
+	  	  			  	  		public void run() {
+	  	  			  	  			SwingUtilities.invokeLater(new Runnable() {
+	  	  			  	  				public void run() {
+	  	  			  	  					try {
+		  	  			  	  				if(model.getQuestionNbPyramid() == 5) {
+		  	  	  								gameView.getPalier1Sound().play();
+		  	  	  							}
+		  	  			  	  				else if(model.getQuestionNbPyramid() == 10) {
+				  	  								gameView.getPalier1Sound().play();
+				  	  						}
+	  	  			  	  						Thread.sleep(14000);
+		  	  	  	  							model.setCurrentLevel(model.getCurrentLevel() + 1);
+		  	    	  							gameView.clearAnswerPanels();
+		  	    	  							model.setQuestionNbPyramid(model.getQuestionNbPyramid() + 1);
+		  	    	  							model.setQuestionNb(1);
+		  	    	  							model.setQuestions(QuestionDAO.getInstance().findSixRandomByNiveau(model.getCurrentLevel()));
+		  	    	  							gameView.writeQuestion();
+		  	    	  							gameView.validate();
+		  	    	  							gameView.changePyramid(model.getQuestionNbPyramid());
+
+	  	  			  	  					} catch (InterruptedException e) {
+	  	  			  	  						e.printStackTrace();
+	  	  			  	  					}
+	  	  			  	  				}
+	  	  			  	  			});
+	  	  			  	  		}}).start();
+  	  						}
+
+  	  						// Simple changement de question
+  	  						else {
+  	  							gameView.clearAnswerPanels();
+  	  							model.setQuestionNbPyramid(model.getQuestionNbPyramid() + 1);
+  	  							model.setQuestionNb(model.getQuestionNb() + 1);
+  	  							gameView.writeQuestion();
+  	  							gameView.validate();
+  	  							gameView.changePyramid(model.getQuestionNbPyramid());
+  	  						}
+
   	  					} catch (InterruptedException e) {
   	  						e.printStackTrace();
   	  					}

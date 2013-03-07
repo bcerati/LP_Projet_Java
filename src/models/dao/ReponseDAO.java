@@ -10,6 +10,7 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
+import models.metier.Joueur;
 import models.metier.Question;
 import models.metier.Reponse;
 
@@ -111,6 +112,31 @@ public class ReponseDAO {
 				}
 			}
 		}
+	}
+	
+	public boolean putPlayerResponse(Joueur j, Question q, Reponse r) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+		PreparedStatement st = null;
+
+		try {
+			st = (PreparedStatement) co.prepareStatement("INSERT INTO joueur_reponse(id_joueur, id_question, id_reponse) VALUES(?, ?, ?)");
+			st.setInt(1, j.getId());
+			st.setInt(2, q.getId());
+			st.setInt(3, r.getId());
+			st.executeUpdate();
+			return true;
+		} catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		} finally {
+			try {
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+		return false;
 	}
 
 }

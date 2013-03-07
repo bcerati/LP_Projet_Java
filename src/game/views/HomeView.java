@@ -2,6 +2,7 @@ package game.views;
 
 import game.controllers.HomeController;
 import general_views.Button;
+import general_views.Dialog;
 import general_views.Panel;
 
 import java.applet.Applet;
@@ -9,7 +10,6 @@ import java.applet.AudioClip;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -101,7 +101,7 @@ public class HomeView extends JFrame {
 	}
 
 	public void showRules() {
-		JOptionPane.showMessageDialog(this, "Ici les règles !");
+		Dialog.messageDialog(this, "Règles du jeu", true, "Ici les règles");
 	}
 
 	public AudioClip getAudioClip() {

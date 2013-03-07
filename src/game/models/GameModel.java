@@ -15,7 +15,7 @@ public class GameModel {
 
 	private Joueur joueur;
 	
-	private int current_level;
+	private int currentLevel;
 	
 	private Vector<Question> questions;
 	private int questionNb; // nième question posée dans le niveau (de 1 à 6 (avec le switch))
@@ -27,6 +27,7 @@ public class GameModel {
 	private boolean isSwitch;
 
 	public GameModel(int w, int h) {
+		currentLevel = 1;
 		setCaseWidth(w);
 		setCaseHeight(h);
 		questionNb = 1;
@@ -65,12 +66,12 @@ public class GameModel {
 		this.joueur = joueur;
 	}
 
-	public int getCurrent_level() {
-		return current_level;
+	public int getCurrentLevel() {
+		return currentLevel;
 	}
 
-	public void setCurrent_level(int current_level) {
-		this.current_level = current_level;
+	public void setCurrentLevel(int current_level) {
+		this.currentLevel = current_level;
 	}
 
 	public Vector<Question> getQuestions() {

@@ -30,22 +30,29 @@ public class JoueurDAO {
 
 	}
 
-	public boolean save(Joueur j) {
+	public int save(Joueur j) {
 
 		// Nouveau joueur
 		if(j.getId() == 0) {
+			int id = -1;
 
 			// Ajout d'un nouveau joueur
 			Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
 	
 			PreparedStatement st = null;
-	
+			ResultSet rs = null;
+
 			try {
-				st = (PreparedStatement) co.prepareStatement("INSERT INTO joueur(id_joueur, nom) VALUES(?, ?)");
+				st = (PreparedStatement) co.prepareStatement("INSERT INTO joueur(id_joueur, nom) VALUES(?, ?)", Statement.RETURN_GENERATED_KEYS);
 				st.setInt(1, j.getId());
 				st.setString(2, j.getNom());
 				st.executeUpdate();
-				return true;
+				rs = st.getGeneratedKeys();
+
+				while(rs.next()) {
+					id = rs.getInt(1);
+				}
+				return id;
 			} catch (SQLException se) {
 				System.out.println("Erreur requête SQL : " + se.getMessage());
 			} finally {
@@ -56,12 +63,12 @@ public class JoueurDAO {
 					System.out.println("charge : erreur close "+e.getMessage());
 				}
 			}
-			return false;
+			return -1;
 		}
 
 		// UPDATE
 		else {
-			return false;
+			return -1;
 		}
 	}
 

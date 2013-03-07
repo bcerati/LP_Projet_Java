@@ -39,13 +39,20 @@ public class Joueur {
         return nom;
     }
     
-    /*
-     * Getter de l'identifiant
-     * @return : int
-     */ 
-    public int getId(){
-        return id;
-    }
+     /*
+      * Getter de l'identifiant
+      * @return : int
+      */ 
+     public int getId(){
+         return id;
+     }
+     
+     /*
+      * Setter de l'identifiant
+      */ 
+     public void setId(int id){
+         this.id = id;
+     }
     
 
     

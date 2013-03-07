@@ -3,20 +3,18 @@ package game.views;
 import game.controllers.GameController;
 import game.models.GameModel;
 import general_views.Button;
+import general_views.Dialog;
 import general_views.Panel;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import models.metier.Question;
@@ -38,6 +36,7 @@ public class GameView extends JFrame {
 
 	// Panel de la question
 	private Panel questionPanel;
+	private JPanel panelTop;
 
 	// Boutons des réponses proposées à la question posée
 	private JPanel panelResponses;
@@ -50,6 +49,7 @@ public class GameView extends JFrame {
 	
 	private AudioClip backgroundSound = null;
 	private AudioClip goodSound = null;
+	private AudioClip palier1Sound = null;
 
 
 	public GameView() {
@@ -71,6 +71,7 @@ public class GameView extends JFrame {
 	private void setSounds() {
 		backgroundSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/background_sound.wav"));
 		goodSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/good_sound.wav"));		
+		palier1Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1500_sound.wav"));		
 	}
 
 	public void buildGUI() {
@@ -89,7 +90,7 @@ public class GameView extends JFrame {
 		int caseWidht = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
 
 		// Panel du haut (= bouton quit + jokers + logo + pyramide)
-		JPanel panelTop = new JPanel();
+		panelTop = new JPanel();
 		panelTop.setLayout(new BoxLayout(panelTop, BoxLayout.LINE_AXIS));
 		panelTop.setPreferredSize(new Dimension(10 * caseWidht, 5 * caseHeight));
 
@@ -171,7 +172,8 @@ public class GameView extends JFrame {
 	}
 
 	public String askPseudo() {
-		String s = JOptionPane.showInputDialog("Veuillez entrer votre pseudo :");
+		Dialog.textFieldDialog(this, "Nom du joueur", true, "Veuillez entrez le nom du joueur");
+		String s = Dialog.choix;
 
 		if(s.equals(""))
 			return "John Doe";
@@ -180,9 +182,13 @@ public class GameView extends JFrame {
 	}
 
 	public void setQuestion(String q) {
-		questionPanel.removeAll();
-		JLabel lbl = new JLabel("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 12px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+q+"</div></body></html>");  
-		questionPanel.add(lbl);
+		if(questionPanel.getComponents().length == 0) {
+			JLabel lbl = new JLabel("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 12px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+q+"</div></body></html>");  
+			questionPanel.add(lbl);
+		}
+		else
+			((JLabel)questionPanel.getComponent(0)).setText("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 12px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+q+"</div></body></html>");
+		this.validate();
 	}
 
 	public void setRepA(String a) {
@@ -281,6 +287,17 @@ public class GameView extends JFrame {
 		return goodSound;
 	}
 	
+	public AudioClip getPalier1Sound() {
+		return palier1Sound;
+	}
+	
+	public  void changePyramid(int i) {
+		
+		Panel panelPyramide = new Panel("pyramide_palier"+i+".png", 4 * controller.getModel().getCaseWidth(), 5 * controller.getModel().getCaseHeight());
+		panelTop.remove(2);
+		panelTop.add(panelPyramide, 2);
+		panelTop.validate();
+	}
 	public void writeQuestion() {
 
 		// Affichage de la question
@@ -289,7 +306,29 @@ public class GameView extends JFrame {
 		setRepA(q.getReponses().get(0).getIntitule());
 		setRepB(q.getReponses().get(1).getIntitule());
 		setRepC(q.getReponses().get(2).getIntitule());
-		setRepD(q.getReponses().get(3).getIntitule());		
+		setRepD(q.getReponses().get(3).getIntitule());
+		setResponsesListeners(true, true, true, true);
+
+	}
+
+	public void clearAnswerPanels() {
+		GameModel m = controller.getModel();
+
+		panelResponses.remove(0);
+		btnRespA = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		panelResponses.add(btnRespA, 0);
+
+		panelResponses.remove(1);
+		btnRespB = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		panelResponses.add(btnRespB, 1);
+
+		panelResponses.remove(2);
+		btnRespC = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		panelResponses.add(btnRespC, 2);
+
+		panelResponses.remove(3);
+		btnRespD = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		panelResponses.add(btnRespD, 3);
 	}
 
 	public boolean switchToSelected(String q) {
@@ -422,6 +461,7 @@ public class GameView extends JFrame {
 	}
 
 	public int showAskFinalAnswer(String string) {
-		return JOptionPane.showConfirmDialog(this, string);		
+		Dialog.confirmDialog(this, "Dernier mot ?", true, string);
+		return (Dialog.reponse) ? 1 : 0;
 	}
 }
