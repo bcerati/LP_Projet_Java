@@ -6,9 +6,11 @@ import general_views.Button;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import models.dao.JoueurDAO;
 import models.dao.QuestionDAO;
@@ -56,7 +58,7 @@ public class GameController implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String actionCommand = e.getActionCommand();
+		final String actionCommand = e.getActionCommand();
 		
 		if(actionCommand.equals("quitWhitoutSaving")) {
 			if(JOptionPane.showConfirmDialog(null, "Voulez-vous vraiment quitter ?", "Voulez-vous vraiment quitter ?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
@@ -64,9 +66,23 @@ public class GameController implements ActionListener {
 		}
 		
 		// On clique sur la réponse A
-		else if(actionCommand.equals("A")) {
-			gameView.switchSelect();
-			
+		else if(actionCommand.equals("A") || actionCommand.equals("B") || actionCommand.equals("C") || actionCommand.equals("D")) {
+      	  gameView.switchSelect(actionCommand); // On sélectionne la réponse choisie (en orrange)
+
+      	  // On démarre une nouveau Thread pour faire patienter un peu (suspens toussa)
+      	  	new Thread(new Runnable() {
+      	  		public void run() {
+      	  			SwingUtilities.invokeLater(new Runnable() {
+      	  				public void run() {
+      	  					try {
+      	  						Thread.sleep(3000);
+      	  						System.out.println("ok");
+      	  					} catch (InterruptedException e) {
+      	  						e.printStackTrace();
+      	  					}
+      	  				}
+      	  			});
+      	  		}}).start();
 		}
 	}
 

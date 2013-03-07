@@ -1,18 +1,23 @@
 package game.views;
 
 import game.controllers.GameController;
+import game.models.GameModel;
 import general_views.Button;
 import general_views.Panel;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import models.metier.Reponse;
 
 
 public class GameView extends JFrame {
@@ -174,10 +179,24 @@ public class GameView extends JFrame {
 		btnRespA.add(lbl);
 	}
 	
+	public void setRepA(String a, boolean select) {
+		btnRespA.removeAll();
+		a = "<span>A.</span> " + a;
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+a+"</div></body></html>");  
+		btnRespA.add(lbl);
+	}
+	
 	public void setRepB(String b) {
 		btnRespB.removeAll();
 		b = "<span>B.</span> " + b;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
+		btnRespB.add(lbl);
+	}
+	
+	public void setRepB(String b, boolean select) {
+		btnRespB.removeAll();
+		b = "<span>B.</span> " + b;
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
 		btnRespB.add(lbl);
 	}
 	
@@ -188,6 +207,13 @@ public class GameView extends JFrame {
 		btnRespC.add(lbl);
 	}
 	
+	public void setRepC(String c, boolean select) {
+		btnRespC.removeAll();
+		c = "<span>C.</span> " + c;
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+c+"</div></body></html>");  
+		btnRespC.add(lbl);
+	}
+	
 	public void setRepD(String d) {
 		btnRespD.removeAll();
 		d = "<span>D.</span> " + d;
@@ -195,6 +221,13 @@ public class GameView extends JFrame {
 		btnRespD.add(lbl);
 	}
 
+	public void setRepD(String d, boolean select) {
+		btnRespD.removeAll();
+		d = "<span>D.</span> " + d;
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+d+"</div></body></html>");  
+		btnRespD.add(lbl);
+	}
+	
 	public Button getBtnRespA() {
 		return btnRespA;
 	}
@@ -227,14 +260,76 @@ public class GameView extends JFrame {
 		this.btnRespD = btnRespD;
 	}
 
-	public void switchSelect() {
-		panelResponses.remove(0);
-		btnRespA = new Button("question_select.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
-		btnRespA.setActionCommand("A");
-		btnRespA.addActionListener(controller);
-		System.out.println("ok");
-		panelResponses.add(btnRespA, 0);
-		this.repaint();
-		this.validate();
+	public boolean switchSelect(String q) {
+		GameModel m = controller.getModel();
+		ArrayList<Reponse> v = m.getQuestions().get(m.getQuestionNb() - 1).getReponses();
+
+		if(q.equals("A")) {
+			panelResponses.remove(0);
+			btnRespA = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			setRepA(v.get(0).getIntitule(), true);
+			panelResponses.add(btnRespA, 0);
+			this.validate();
+		}
+		else if(q.equals("B")) {
+			panelResponses.remove(1);
+			btnRespB = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			setRepB(v.get(1).getIntitule(), true);
+			panelResponses.add(btnRespB, 1);
+			this.validate();
+		}
+		else if(q.equals("C")) {
+			panelResponses.remove(2);
+			btnRespC = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			setRepC(v.get(2).getIntitule(), true);
+			panelResponses.add(btnRespC, 2);
+			this.validate();
+		}
+		else if(q.equals("D")) {
+			panelResponses.remove(3);
+			btnRespD = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			setRepD(v.get(3).getIntitule(), true);
+			panelResponses.add(btnRespD, 3);
+			this.validate();
+		}
+		setResponsesListeners(false, false, false, false);
+		return true;
+
+	}
+	
+	public void setResponsesListeners(boolean a, boolean b, boolean c, boolean d) {
+
+		for(int i = 0 ; i < btnRespA.getActionListeners().length ; i++)
+			btnRespA.removeActionListener(btnRespA.getActionListeners()[i]);
+
+		for(int i = 0 ; i < btnRespB.getActionListeners().length ; i++)
+			btnRespB.removeActionListener(btnRespB.getActionListeners()[i]);
+
+		for(int i = 0 ; i < btnRespC.getActionListeners().length ; i++)
+			btnRespC.removeActionListener(btnRespC.getActionListeners()[i]);
+
+		for(int i = 0 ; i < btnRespD.getActionListeners().length ; i++)
+			btnRespD.removeActionListener(btnRespD.getActionListeners()[i]);
+
+		if(a) {
+			btnRespA.setActionCommand("A");
+			btnRespA.addActionListener(controller);
+		}
+		
+		if(b) {
+			btnRespB.setActionCommand("B");
+			btnRespB.addActionListener(controller);
+		}
+		
+		if(c) {
+			btnRespC.setActionCommand("C");
+			btnRespC.addActionListener(controller);
+		}
+		
+		if(d) {
+			btnRespD.setActionCommand("D");
+			btnRespD.addActionListener(controller);
+		}
+
 	}
 }
