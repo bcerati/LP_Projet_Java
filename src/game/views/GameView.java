@@ -70,7 +70,7 @@ public class GameView extends JFrame {
 	
 	private void setSounds() {
 		backgroundSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/background_sound.wav"));
-		goodSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/good_sound.wav"));		
+		goodSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/good.wav"));		
 		palier1Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1500_sound.wav"));		
 	}
 
@@ -100,7 +100,7 @@ public class GameView extends JFrame {
 
 		Button btnQuit = new Button("quitter.png", caseWidht, caseHeight);
 		btnQuit.setActionCommand("quitWhitoutSaving");
-		btnQuit.addActionListener(new GameController(this));
+		btnQuit.addActionListener(controller);
 		panelJokers.add(btnQuit);
 
 		btn5050 = new Button("joker_5050.png", caseWidht, caseHeight);
@@ -280,6 +280,7 @@ public class GameView extends JFrame {
 	}
 
 	public AudioClip getBackgroundSound() {
+		backgroundSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/background_sound.wav"));
 		return backgroundSound;
 	}
 

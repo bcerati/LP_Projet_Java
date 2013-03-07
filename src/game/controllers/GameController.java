@@ -153,14 +153,14 @@ public class GameController implements ActionListener {
 	}
 	
 	private void forward() {
-		gameView.getBackgroundSound().stop();
 		gameView.getGoodSound().play();
+
 		new Thread(new Runnable() {
   	  		public void run() {
   	  			SwingUtilities.invokeLater(new Runnable() {
   	  				public void run() {
   	  					try {
-  	  						Thread.sleep(1000);
+  	  						Thread.sleep(3000);
 
   	  						// Changement de palier
   	  						if(model.getQuestionNbPyramid() % 5 == 0) {
@@ -176,7 +176,7 @@ public class GameController implements ActionListener {
 		  	  			  	  				else if(model.getQuestionNbPyramid() == 10) {
 				  	  								gameView.getPalier1Sound().play();
 				  	  						}
-	  	  			  	  						Thread.sleep(14000);
+	  	  			  	  						Thread.sleep(9000);
 		  	  	  	  							model.setCurrentLevel(model.getCurrentLevel() + 1);
 		  	    	  							gameView.clearAnswerPanels();
 		  	    	  							model.setQuestionNbPyramid(model.getQuestionNbPyramid() + 1);
@@ -221,7 +221,19 @@ public class GameController implements ActionListener {
   	  				public void run() {
   	  					try {
   	  						Thread.sleep(1000);
-      	  					System.out.println("PERDUUUUUUUUUUUUUUUUUUUU!");
+
+  	  						int valueDivise = model.getQuestionNbPyramid() / 5;
+
+  	  						if(valueDivise == 0 || (valueDivise == 1 && model.getQuestionNbPyramid() == 5))
+  	  							JoueurDAO.getInstance().addScore(model.getJoueur().getId(), 0);
+  	  						else if(valueDivise == 1 || (valueDivise == 2 && model.getQuestionNbPyramid() == 10)) {
+  	  							JoueurDAO.getInstance().addScore(model.getJoueur().getId(), model.PALIER1);
+  	  						}
+  	  						else if(valueDivise == 2 || (valueDivise == 3 && model.getQuestionNbPyramid() == 15)) {
+  	  							JoueurDAO.getInstance().addScore(model.getJoueur().getId(), model.PALIER2);
+  	  						}
+  	  						
+
   	  					} catch (InterruptedException e) {
   	  						e.printStackTrace();
   	  					}

@@ -101,4 +101,31 @@ public class JoueurDAO {
 		return nb;
 	}
 
+	public boolean addScore(int id, int somme) {
+
+		// Ajout d'un nouveau score de joueur
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+
+		PreparedStatement st = null;
+
+		try {
+			st = (PreparedStatement) co.prepareStatement("INSERT INTO joueur_score(id_joueur, date, score_final) VALUES(?, NOW(), ?)");
+			st.setInt(1, id);
+			st.setInt(2, somme);
+			st.executeUpdate();
+			return true;
+		} catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		} finally {
+			try {
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+		return false;
+
+	}
+
 }

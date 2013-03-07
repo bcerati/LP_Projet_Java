@@ -25,6 +25,10 @@ public class GameModel {
 	private boolean is5050;
 	private boolean isAmis;
 	private boolean isSwitch;
+	
+	public static final int PALIER1 = 1500;
+	public static final int PALIER2 = 48000;
+	public static final int PALIER3 = 1000000;
 
 	public GameModel(int w, int h) {
 		currentLevel = 1;
