@@ -18,7 +18,8 @@ public class GameModel {
 	private int current_level;
 	
 	private Vector<Question> questions;
-	private int questionNb;
+	private int questionNb; // nième question posée dans le niveau (de 1 à 6 (avec le switch))
+	private int questionNbPyramid; // nième question posée
 	
 	private boolean isCoupDeFil;
 	private boolean is5050;
@@ -29,6 +30,7 @@ public class GameModel {
 		setCaseWidth(w);
 		setCaseHeight(h);
 		questionNb = 1;
+		questionNbPyramid = 1;
 		isCoupDeFil = false;
 		is5050 = false;
 		isAmis = false;
@@ -85,6 +87,14 @@ public class GameModel {
 
 	public void setQuestionNb(int questionNb) {
 		this.questionNb = questionNb;
+	}
+
+	public int getQuestionNbPyramid() {
+		return questionNbPyramid;
+	}
+
+	public void setQuestionNbPyramid(int questionNbPyramid) {
+		this.questionNbPyramid = questionNbPyramid;
 	}
 
 	public boolean isCoupDeFil() {
