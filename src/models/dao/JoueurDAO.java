@@ -75,7 +75,7 @@ public class JoueurDAO {
 	public int getNbJoueurs() {
 		
 		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
-		String reqNb = "SELECT COUNT(*) AS nbJoueurs FROM joueur";
+		String reqNb = "SELECT COUNT(*) AS nbScore FROM joueur_score";
 
 		Statement st = null;
 		ResultSet res= null;
@@ -85,7 +85,7 @@ public class JoueurDAO {
 			st = (Statement) co.createStatement();
 			res = st.executeQuery(reqNb);
 			res.next();
-			nb = res.getInt("nbJoueurs");
+			nb = res.getInt("nbScore");
 			
 		} catch (SQLException se) {
 			System.out.println("Erreur requête SQL : " + se.getMessage());

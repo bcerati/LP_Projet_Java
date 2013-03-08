@@ -159,7 +159,7 @@ public class GameController implements ActionListener {
 	}
 
 	private boolean askFinalAnswer() {
-		if(gameView.showAskFinalAnswer("<p style=\"text-align: center; font-weight: bold; font-size: 13px;\">C'est votre dernier mot ?</p>") == 1)
+		if(model.getQuestionNbPyramid() <= 5 || gameView.showAskFinalAnswer("<p style=\"text-align: center; font-weight: bold; font-size: 13px;\">C'est votre dernier mot ?</p>") == 1)
 			return true;
 		else
 			return false;
