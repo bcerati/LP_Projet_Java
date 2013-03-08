@@ -38,13 +38,10 @@ public class ConnexionMySQL {
 			this.demandePilote();
 			this.demandeConnexion();
 		} catch (ClassNotFoundException cnfe) {
-			System.out.println("Pb de driver : .jar dans le classpath ??? "
-					+ cnfe.getMessage());
+			System.out.println("Pb de driver : .jar dans le classpath ??? " + cnfe.getMessage());
 		} catch (SQLException se) {
-			System.out.println("Connexion impossible : pb de droits ??? "
-					+ se.getMessage());
+			System.out.println("Connexion impossible : pb de droits ??? " + se.getMessage());
 		}
-		System.out.println("connexion établie.");
 	}
 
 	/**
@@ -127,7 +124,6 @@ public class ConnexionMySQL {
 
 		ClassLoader cl = this.getClass().getClassLoader();
 		URL url = cl.getResource("config/bdd.properties");
-		System.out.println(url);
 		
 		this.proprietes = new Properties();
 

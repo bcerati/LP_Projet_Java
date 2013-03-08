@@ -10,6 +10,9 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.security.KeyStore.Builder;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -48,8 +51,12 @@ public class GameView extends JFrame {
 	private GameController controller;
 	
 	private AudioClip backgroundSound = null;
+	private AudioClip selectionSound = null;
 	private AudioClip goodSound = null;
+	private AudioClip wrongSound = null;
 	private AudioClip palier1Sound = null;
+	private AudioClip palier2Sound = null;
+	private AudioClip palier3Sound = null;
 
 
 	public GameView() {
@@ -71,7 +78,11 @@ public class GameView extends JFrame {
 	private void setSounds() {
 		backgroundSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/background_sound.wav"));
 		goodSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/good.wav"));		
+		wrongSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/wrong.wav"));		
 		palier1Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1500_sound.wav"));		
+		palier2Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/48000_sound.wav"));		
+		palier3Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1000000_sound.wav"));		
+		selectionSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/selection_question.wav"));		
 	}
 
 	public void buildGUI() {
@@ -99,7 +110,7 @@ public class GameView extends JFrame {
 		panelJokers.setPreferredSize(new Dimension(caseWidht, 5 * caseHeight));
 
 		Button btnQuit = new Button("quitter.png", caseWidht, caseHeight);
-		btnQuit.setActionCommand("quitWhitoutSaving");
+		btnQuit.setActionCommand("quitWhithSaving");
 		btnQuit.addActionListener(controller);
 		panelJokers.add(btnQuit);
 
@@ -166,7 +177,7 @@ public class GameView extends JFrame {
 
 		return panelResponses;
 	}
-
+	
 	public GameController getController() {
 		return controller;
 	}
@@ -288,8 +299,24 @@ public class GameView extends JFrame {
 		return goodSound;
 	}
 	
+	public AudioClip getWrongSound() {
+		return wrongSound;
+	}
+	
 	public AudioClip getPalier1Sound() {
 		return palier1Sound;
+	}
+	
+	public AudioClip getPalier2Sound() {
+		return palier2Sound;
+	}
+	
+	public AudioClip getPalier3Sound() {
+		return palier3Sound;
+	}
+	
+	public AudioClip getSelectionSound() {
+		return selectionSound;
 	}
 	
 	public  void changePyramid(int i) {
@@ -464,5 +491,6 @@ public class GameView extends JFrame {
 	public int showAskFinalAnswer(String string) {
 		Dialog.confirmDialog(this, "Dernier mot ?", true, string);
 		return (Dialog.reponse) ? 1 : 0;
-	}
+	}	
+	
 }

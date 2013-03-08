@@ -21,6 +21,8 @@ public class GameModel {
 	private int questionNb; // nième question posée dans le niveau (de 1 à 6 (avec le switch))
 	private int questionNbPyramid; // nième question posée
 	
+	private int finalAnswer = -1;
+
 	private boolean isCoupDeFil;
 	private boolean is5050;
 	private boolean isAmis;
@@ -29,6 +31,14 @@ public class GameModel {
 	public static final int PALIER1 = 1500;
 	public static final int PALIER2 = 48000;
 	public static final int PALIER3 = 1000000;
+
+	// Temps d'attente
+	public static final int SUSPENS = 3000; // 3000
+	public static final int WRONG = 3000; // 3000
+	public static final int NEW_QUESTION = 3000; // 3000
+	public static final int CHANGE_LEVEL1 = 9000; // 9000
+	public static final int CHANGE_LEVEL2 = 5000; // 9000
+	public static final int CHANGE_LEVEL3 = 12000; // 12000
 
 	public GameModel(int w, int h) {
 		currentLevel = 1;
@@ -133,4 +143,13 @@ public class GameModel {
 	public void setSwitch(boolean isSwitch) {
 		this.isSwitch = isSwitch;
 	}
+
+	public int getFinalAnswer() {
+		return finalAnswer;
+	}
+
+	public void setFinalAnswer(int finalAnswer) {
+		this.finalAnswer = finalAnswer;
+	}
+
 }

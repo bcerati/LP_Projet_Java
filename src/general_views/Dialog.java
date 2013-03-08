@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class Dialog {
 	
@@ -31,6 +32,7 @@ public class Dialog {
 		 */
 		JPanel panelText = new JPanel();
 	    panelText.setBackground(new Color(33, 30, 104));
+	    panelText.setBorder(new EmptyBorder(10, 20, 10, 20));
 
 	    JPanel panelButton = new JPanel();
 	    panelButton.setBackground(new Color(33, 30, 104));
@@ -137,7 +139,8 @@ public class Dialog {
 	     */
 	    JPanel panelText = new JPanel();
 	    panelText.setBackground(new Color(33, 30, 104));
-	
+	    panelText.setBorder(new EmptyBorder(10, 20, 10, 20));
+
 	    
 	    /**
 	     * Création panelBouton + couleur de fond
@@ -250,6 +253,7 @@ public class Dialog {
 		 */
 		JPanel windows = new JPanel();
 	    windows.setLayout(new BoxLayout(windows, BoxLayout.PAGE_AXIS));
+	    windows.setBorder(new EmptyBorder(10, 40, 10, 40));
 	    windows.setBackground(new Color(33, 30, 104));
 	
 	    
