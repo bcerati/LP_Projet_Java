@@ -3,20 +3,13 @@ package game.controllers;
 import game.models.GameModel;
 import game.views.GameView;
 import game.views.HomeView;
-import general_views.Button;
 import general_views.Dialog;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
-import javax.swing.text.View;
 
 import models.dao.JoueurDAO;
 import models.dao.QuestionDAO;
@@ -97,6 +90,11 @@ public class GameController implements ActionListener {
 			}
 		}
 		
+		// Joker switch
+		else if(actionCommand.equals("jokerSwitch")) {
+			switchQuestion();
+		}
+		
 		// On clique sur la réponse A
 		else if(actionCommand.equals("A") || actionCommand.equals("B") || actionCommand.equals("C") || actionCommand.equals("D")) {
 			
@@ -140,6 +138,26 @@ public class GameController implements ActionListener {
 		}
 	}
 	
+	private void switchQuestion() {
+		model.setQuestionNb(model.getQuestionNb() + 1);
+		gameView.switchToGood(getGoodAnswer());
+		
+		new Thread(new Runnable() {
+  	  		public void run() {
+  	  			SwingUtilities.invokeLater(new Runnable() {
+  	  				public void run() {
+  	  					try {
+  	  						Thread.sleep(2000);
+	  	  					gameView.writeQuestion();
+	  	  					gameView.changeBtnSwitchToUse();
+  	  					} catch (InterruptedException e) {
+  	  						e.printStackTrace();
+  	  					}
+  	  				}
+  	  			});
+  	  		}}).start();
+	}
+
 	private boolean askFinalAnswer() {
 		if(gameView.showAskFinalAnswer("<p style=\"text-align: center; font-weight: bold; font-size: 13px;\">C'est votre dernier mot ?</p>") == 1)
 			return true;
@@ -147,11 +165,9 @@ public class GameController implements ActionListener {
 			return false;
 	}
 
-	private boolean answerCorrection(String questionNum) {
-		boolean isJuste = false;
+	public String getGoodAnswer() {
 		ArrayList<Reponse> v = model.getQuestions().get(model.getQuestionNb() - 1).getReponses();
 		String good = null;
-		int currentSelected = 0;
 
 		if(v.get(0).isJuste())
 			good = "A";
@@ -161,28 +177,30 @@ public class GameController implements ActionListener {
 			good = "C";
 		if(v.get(3).isJuste())
 			good = "D";
+		return good;
+	}
+
+	private boolean answerCorrection(String questionNum) {
+		boolean isJuste = false;
+		ArrayList<Reponse> v = model.getQuestions().get(model.getQuestionNb() - 1).getReponses();
 			
 		if(questionNum.equals("A")) {
-			currentSelected = 0;
 			if(v.get(0).isJuste())
 				isJuste = true;
 		}
 		else if(questionNum.equals("B")) {
-			currentSelected = 1;
 			if(v.get(1).isJuste())
 				isJuste = true;
 		}
 		else if(questionNum.equals("C")) {
-			currentSelected = 2;
 			if(v.get(2).isJuste())
 				isJuste = true;
 		}
 		else {
-			currentSelected = 3;
 			if(v.get(3).isJuste())
 				isJuste = true;
 		}
-		gameView.switchToGood(good, currentSelected);
+		gameView.switchToGood(getGoodAnswer());
 		return isJuste;
 	}
 	

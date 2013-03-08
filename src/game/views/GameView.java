@@ -10,9 +10,6 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.security.KeyStore.Builder;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -124,6 +121,8 @@ public class GameView extends JFrame {
 		panelJokers.add(btnPublic);
 
 		btnSwitch = new Button("joker_switch.png", caseWidht, caseHeight);
+		btnSwitch.setActionCommand("jokerSwitch");
+		btnSwitch.addActionListener(controller);
 		panelJokers.add(btnSwitch);
 
 		// Panel du logo du jeu
@@ -136,13 +135,13 @@ public class GameView extends JFrame {
 		panelTop.add(panelJokers);
 		panelTop.add(panelLogo);
 		panelTop.add(panelPyramide);
-		
+
 		return panelTop;
 	}
-	
+
 	public JPanel buildQuestion() {
 		int caseWidht = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
-		
+
 		questionPanel = new Panel("question.png", 10 * caseWidht, caseHeight);
 		
 		return questionPanel;
@@ -155,22 +154,22 @@ public class GameView extends JFrame {
 		panelResponses = new JPanel(new GridLayout(2, 2));
 		panelResponses.setPreferredSize(new Dimension(10 * caseWidht, 2 * caseHeight));
 		
-		btnRespA = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespA = new Button("reponse_haut_gauche.png", 5 * caseWidht, caseHeight);
 		btnRespA.setActionCommand("A");
 		btnRespA.addActionListener(controller);
 		panelResponses.add(btnRespA);
 
-		btnRespB = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespB = new Button("reponse_haut_droit.png", 5 * caseWidht, caseHeight);
 		btnRespB.setActionCommand("B");
 		btnRespB.addActionListener(controller);
 		panelResponses.add(btnRespB);
 
-		btnRespC = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespC = new Button("reponse_bas_gauche.png", 5 * caseWidht, caseHeight);
 		btnRespC.setActionCommand("C");
 		btnRespC.addActionListener(controller);
 		panelResponses.add(btnRespC);
 
-		btnRespD = new Button("reponse.png", 5 * caseWidht, caseHeight);
+		btnRespD = new Button("reponse_bas_droit.png", 5 * caseWidht, caseHeight);
 		btnRespD.setActionCommand("D");
 		btnRespD.addActionListener(controller);
 		panelResponses.add(btnRespD);
@@ -194,11 +193,11 @@ public class GameView extends JFrame {
 
 	public void setQuestion(String q) {
 		if(questionPanel.getComponents().length == 0) {
-			JLabel lbl = new JLabel("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 12px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+q+"</div></body></html>");  
+			JLabel lbl = new JLabel("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 10px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+q+"</div></body></html>");  
 			questionPanel.add(lbl);
 		}
 		else
-			((JLabel)questionPanel.getComponent(0)).setText("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 12px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+q+"</div></body></html>");
+			((JLabel)questionPanel.getComponent(0)).setText("<html><head><style>div {font-size: 14px; width: 800px; margin-left: 40px; margin-right: 40px; text-align: center; padding-top: 10px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+q+"</div></body></html>");
 		this.validate();
 	}
 
@@ -329,6 +328,7 @@ public class GameView extends JFrame {
 	public void writeQuestion() {
 
 		// Affichage de la question
+		clearAnswerPanels();
 		Question q = controller.getModel().getQuestions().get(controller.getModel().getQuestionNb() - 1);
 		setQuestion(q.getIntitule());
 		setRepA(q.getReponses().get(0).getIntitule());
@@ -336,26 +336,25 @@ public class GameView extends JFrame {
 		setRepC(q.getReponses().get(2).getIntitule());
 		setRepD(q.getReponses().get(3).getIntitule());
 		setResponsesListeners(true, true, true, true);
-
 	}
 
 	public void clearAnswerPanels() {
 		GameModel m = controller.getModel();
 
 		panelResponses.remove(0);
-		btnRespA = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		btnRespA = new Button("reponse_haut_gauche.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 		panelResponses.add(btnRespA, 0);
 
 		panelResponses.remove(1);
-		btnRespB = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		btnRespB = new Button("reponse_haut_droit.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 		panelResponses.add(btnRespB, 1);
 
 		panelResponses.remove(2);
-		btnRespC = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		btnRespC = new Button("reponse_bas_gauche.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 		panelResponses.add(btnRespC, 2);
 
 		panelResponses.remove(3);
-		btnRespD = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+		btnRespD = new Button("reponse_bas_droit.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 		panelResponses.add(btnRespD, 3);
 	}
 
@@ -365,25 +364,25 @@ public class GameView extends JFrame {
 
 		if(q.equals("A")) {
 			panelResponses.remove(0);
-			btnRespA = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespA = new Button("reponse_select_a.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepA(v.get(0).getIntitule(), true);
 			panelResponses.add(btnRespA, 0);
 		}
 		else if(q.equals("B")) {
 			panelResponses.remove(1);
-			btnRespB = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespB = new Button("reponse_select_b.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepB(v.get(1).getIntitule(), true);
 			panelResponses.add(btnRespB, 1);
 		}
 		else if(q.equals("C")) {
 			panelResponses.remove(2);
-			btnRespC = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespC = new Button("reponse_select_c.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepC(v.get(2).getIntitule(), true);
 			panelResponses.add(btnRespC, 2);
 		}
 		else if(q.equals("D")) {
 			panelResponses.remove(3);
-			btnRespD = new Button("question_select.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespD = new Button("reponse_select_d.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepD(v.get(3).getIntitule(), true);
 			panelResponses.add(btnRespD, 3);
 		}
@@ -393,58 +392,31 @@ public class GameView extends JFrame {
 
 	}
 	
-	public boolean switchToGood(String g, int idCurrentSelected) {
+	public boolean switchToGood(String g) {
 		GameModel m = controller.getModel();
 		ArrayList<Reponse> v = m.getQuestions().get(m.getQuestionNb() - 1).getReponses();
 
-		// On remet normalement l'actuel séléctionné
-		if(idCurrentSelected == 0) {
-			panelResponses.remove(idCurrentSelected);
-			btnRespA = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
-			setRepA(v.get(idCurrentSelected).getIntitule());
-			panelResponses.add(btnRespA, idCurrentSelected);
-		}
-		else if(idCurrentSelected == 1) {
-			panelResponses.remove(idCurrentSelected);
-			btnRespB = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
-			setRepB(v.get(idCurrentSelected).getIntitule());
-			panelResponses.add(btnRespB, idCurrentSelected);
-		}
-		else if(idCurrentSelected == 2) {
-			panelResponses.remove(idCurrentSelected);
-			btnRespC = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
-			setRepC(v.get(idCurrentSelected).getIntitule());
-			panelResponses.add(btnRespC, idCurrentSelected);
-		}
-		else {
-			panelResponses.remove(idCurrentSelected);
-			btnRespD = new Button("reponse.png", 5 * m.getCaseWidth(), m.getCaseHeight());
-			setRepD(v.get(idCurrentSelected).getIntitule());
-			panelResponses.add(btnRespD, idCurrentSelected);
-		}
-
-
 		if(g.equals("A")) {
 			panelResponses.remove(0);
-			btnRespA = new Button("good_answer.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespA = new Button("reponse_juste_a.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepA(v.get(0).getIntitule(), true);
 			panelResponses.add(btnRespA, 0);
 		}
 		else if(g.equals("B")) {
 			panelResponses.remove(1);
-			btnRespB = new Button("good_answer.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespB = new Button("reponse_juste_b.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepB(v.get(1).getIntitule(), true);
 			panelResponses.add(btnRespB, 1);
 		}
 		else if(g.equals("C")) {
 			panelResponses.remove(2);
-			btnRespC = new Button("good_answer.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespC = new Button("reponse_juste_c.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepC(v.get(2).getIntitule(), true);
 			panelResponses.add(btnRespC, 2);
 		}
 		else if(g.equals("D")) {
 			panelResponses.remove(3);
-			btnRespD = new Button("good_answer.png", 5 * m.getCaseWidth(), m.getCaseHeight());
+			btnRespD = new Button("reponse_juste_d.png", 5 * m.getCaseWidth(), m.getCaseHeight());
 			setRepD(v.get(3).getIntitule(), true);
 			panelResponses.add(btnRespD, 3);
 		}
@@ -491,6 +463,15 @@ public class GameView extends JFrame {
 	public int showAskFinalAnswer(String string) {
 		Dialog.confirmDialog(this, "Dernier mot ?", true, string);
 		return (Dialog.reponse) ? 1 : 0;
-	}	
+	}
+	
+	public void changeBtnSwitchToUse() {
+		btnSwitch = new Button("joker_switch_utilise.png", controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
+		btnSwitch.validate();
+		//btnSwitch.removeActionListener(btnSwitch.getActionListeners()[0]);
+		((JPanel)panelTop.getComponent(0)).remove(4);
+		((JPanel)panelTop.getComponent(0)).add(btnSwitch, 4);
+		panelTop.validate();
+	}
 	
 }
