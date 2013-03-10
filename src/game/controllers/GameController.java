@@ -139,8 +139,8 @@ public class GameController implements ActionListener {
 	}
 	
 	private void switchQuestion() {
-		model.setQuestionNb(model.getQuestionNb() + 1);
 		gameView.switchToGood(getGoodAnswer());
+		model.setQuestionNb(model.getQuestionNb() + 1);
 		
 		new Thread(new Runnable() {
   	  		public void run() {
