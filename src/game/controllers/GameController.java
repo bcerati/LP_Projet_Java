@@ -1,14 +1,18 @@
 package game.controllers;
 
 import game.models.GameModel;
+import game.models.JokerTelephoneModel;
 import game.views.GameView;
 import game.views.HomeView;
+import game.views.JokerPublicView;
+import game.views.JokerTelephoneView;
 import general_views.Dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 import models.dao.JoueurDAO;
@@ -20,26 +24,46 @@ import models.metier.Reponse;
 
 
 public class GameController implements ActionListener {
-
 	private GameView gameView;
 	private GameModel model;
+	private JokerPublicView jokerPublicView;
+	private JokerTelephoneView jokerTelephoneView;
+	private JokerTelephoneModel jokerTelephoneModel;
+	private ArrayList<Integer> reponsesEnlevees;
 
 	public GameController(GameView gameView) {
 		model = new GameModel();
 		this.gameView = gameView;
+		jokerPublicView = new JokerPublicView();
+		jokerTelephoneView = new JokerTelephoneView();
     }
 
 	public GameModel getModel() {
 		return model;
 	}
 
-
 	public void setModel(GameModel model) {
 		this.model = model;
 	}
+	
+	public void JokerPublicController(JokerPublicView jokerPublicView) {
+		this.jokerPublicView = jokerPublicView;
+    }
+	
+	public void JokerTelephoneController(JokerTelephoneView jokerTelephoneView) {
+		jokerTelephoneModel = new JokerTelephoneModel();
+		this.jokerTelephoneView = jokerTelephoneView;
+    }
 
+	public JokerTelephoneModel getJokerTelephoneModel() {
+		return jokerTelephoneModel;
+	}
+	
+	public void setJokerTelephoneModel(JokerTelephoneModel jokerTelephoneModel) {
+		this.jokerTelephoneModel = jokerTelephoneModel;
+	}
+	
 	public void createNewGame() {
-
 		// Création du joueur
 		Joueur j = new Joueur(0, this.gameView.askPseudo());
 		getModel().setJoueur(j);
@@ -48,6 +72,15 @@ public class GameController implements ActionListener {
 		getModel().setCurrentLevel(1);
 		getModel().setQuestions(QuestionDAO.getInstance().findSixRandomByNiveau(1));
 
+		// Suppression des variables utilisées avec le joker 50/50 lors du passage à une nouvelle question :
+		getModel().setIs5050(false);
+		reponsesEnlevees = new ArrayList<Integer>();
+		if (reponsesEnlevees.size() > 0) {
+			for (int r = 0; r < reponsesEnlevees.size(); r++) {
+				reponsesEnlevees.remove(r);
+			}
+		}
+		
 		gameView.clearAnswerPanels();
 		gameView.writeQuestion();
 		gameView.getBackgroundSound().loop();
@@ -76,7 +109,7 @@ public class GameController implements ActionListener {
 		}
 		return somme_gagnee;
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final String actionCommand = e.getActionCommand();
@@ -90,6 +123,37 @@ public class GameController implements ActionListener {
 			}
 		}
 		
+		// On clique sur le joker 50/50
+		else if(actionCommand.equals("joker5050")) {
+			joker5050();
+		}
+		
+		// On clique sur le joker de vote du public
+		else if (actionCommand.equals("jokerPublic")) {
+			gameView.useJokerPublic();
+			gameView.repaint();
+			gameView.validate();
+			
+			if (model.isIs5050()) {
+				reponsesEnlevees = getReponsesEnlevees();
+				jokerPublicView = new JokerPublicView(model, reponsesEnlevees);
+			}
+			else {
+				jokerPublicView = new JokerPublicView(model);
+			}
+		}
+		
+		// On clique sur le joker de coup de fil à un ami
+		else if (actionCommand.equals("jokerCoupDeFil")) {
+			if (model.isIs5050()) {
+				reponsesEnlevees = getReponsesEnlevees();
+				jokerTelephoneView = new JokerTelephoneView(model, reponsesEnlevees, gameView);
+			}
+			else {
+				jokerTelephoneView = new JokerTelephoneView(model, gameView);
+			}
+		}
+		
 		// Joker switch
 		else if(actionCommand.equals("jokerSwitch")) {
 			switchQuestion();
@@ -99,6 +163,10 @@ public class GameController implements ActionListener {
 		else if(actionCommand.equals("A") || actionCommand.equals("B") || actionCommand.equals("C") || actionCommand.equals("D")) {
 			
 			if(askFinalAnswer()) {
+				// Fermeture des fenêtres des jokers
+				jokerPublicView.getFrame().dispose();
+				jokerTelephoneView.dispose();
+				
 				Question currentQuestion = model.getQuestions().get(model.getQuestionNb() - 1);
 				Reponse currentRep = null;
 				if(actionCommand.equals("A"))
@@ -111,7 +179,7 @@ public class GameController implements ActionListener {
 					currentRep = currentQuestion.getReponses().get(3);
 				
 				ReponseDAO.getInstance().putPlayerResponse(model.getJoueur(), currentQuestion, currentRep);
-				gameView.switchToSelected(actionCommand); // On sélectionne la réponse choisie (en orrange)
+				gameView.switchToSelected(actionCommand); // On sélectionne la réponse choisie (en orange)
 				gameView.getSelectionSound().play();
 
 	      	  // On démarre une nouveau Thread pour faire patienter un peu (suspens toussa)
@@ -138,7 +206,87 @@ public class GameController implements ActionListener {
 		}
 	}
 	
+	
+	public void joker5050() {
+		// On récupère dans quelle numéro de case est la réponse juste :
+		int indexReponseJuste = 1;
+		Question currentQuestion = model.getQuestions().get(model.getQuestionNb() - 1);
+		ArrayList<Reponse> currentResponses = currentQuestion.getReponses();
+		for (int indexReponse = 0; indexReponse < currentResponses.size(); indexReponse++) {
+			Reponse reponse = currentResponses.get(indexReponse);
+			if (reponse.isJuste()) {
+				indexReponseJuste = indexReponse + 1;
+			}
+		}
+		
+		// On enlève 2 réponses fausses
+		if (indexReponseJuste == 1) {
+			gameView.setRepB("");
+			gameView.setRepC("");
+			gameView.getBtnRespB().removeActionListener(gameView.getBtnRespB().getActionListeners()[0]);
+			gameView.getBtnRespC().removeActionListener(gameView.getBtnRespC().getActionListeners()[0]);
+		}
+		if (indexReponseJuste == 2) {
+			gameView.setRepA("");
+			gameView.setRepD("");
+			gameView.getBtnRespA().removeActionListener(gameView.getBtnRespA().getActionListeners()[0]);
+			gameView.getBtnRespD().removeActionListener(gameView.getBtnRespD().getActionListeners()[0]);
+		}
+		if (indexReponseJuste == 3) {
+			gameView.setRepB("");
+			gameView.setRepD("");
+			gameView.getBtnRespB().removeActionListener(gameView.getBtnRespB().getActionListeners()[0]);
+			gameView.getBtnRespD().removeActionListener(gameView.getBtnRespD().getActionListeners()[0]);
+		}
+		if (indexReponseJuste == 4) {
+			gameView.setRepA("");
+			gameView.setRepC("");
+			gameView.getBtnRespA().removeActionListener(gameView.getBtnRespA().getActionListeners()[0]);
+			gameView.getBtnRespC().removeActionListener(gameView.getBtnRespC().getActionListeners()[0]);
+		}
+		
+		gameView.useJoker5050();
+		gameView.repaint();
+		gameView.validate();
+		gameView.getJoker5050Sound().play();
+	}
+	
+	
+	public ArrayList<Integer> getReponsesEnlevees() {
+		ArrayList<Integer> reponsesEnlevees = new ArrayList<Integer>();
+		
+		JLabel lblA = (JLabel) gameView.getBtnRespA().getComponent(0);
+		String respA = lblA.getText().split("</span>")[1].split("</div>")[0].trim();
+		if (respA.equals("")) {
+			reponsesEnlevees.add(0);
+		}
+		
+		JLabel lblB = (JLabel) gameView.getBtnRespB().getComponent(0);
+		String respB = lblB.getText().split("</span>")[1].split("</div>")[0].trim();
+		if (respB.equals("")) {
+			reponsesEnlevees.add(1);
+		}
+		
+		JLabel lblC = (JLabel) gameView.getBtnRespC().getComponent(0);
+		String respC = lblC.getText().split("</span>")[1].split("</div>")[0].trim();
+		if (respC.equals("")) {
+			reponsesEnlevees.add(2);
+		}
+		
+		JLabel lblD = (JLabel) gameView.getBtnRespD().getComponent(0);
+		String respD = lblD.getText().split("</span>")[1].split("</div>")[0].trim();
+		if (respD.equals("")) {
+			reponsesEnlevees.add(3);
+		}
+		
+		return reponsesEnlevees;
+	}
+	
+	
 	private void switchQuestion() {
+		// Fermeture des fenêtres des jokers
+		jokerPublicView.getFrame().dispose();
+		jokerTelephoneView.dispose();
 		gameView.switchToGood(getGoodAnswer());
 		model.setQuestionNb(model.getQuestionNb() + 1);
 		
@@ -281,9 +429,16 @@ public class GameController implements ActionListener {
 	private void showHomePage() {
 		new HomeView();
 		gameView.dispose();
+		// Fermeture des fenêtres des jokers
+		jokerPublicView.getFrame().dispose();
+		jokerTelephoneView.dispose();
 	}
 
 	private void lose() {
+		// Fermeture des fenêtres des jokers
+		jokerPublicView.getFrame().dispose();
+		jokerTelephoneView.dispose();
+		
 		gameView.getBackgroundSound().stop();
 		gameView.getWrongSound().play();
 		new Thread(new Runnable() {

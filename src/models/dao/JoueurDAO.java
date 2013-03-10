@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.mysql.jdbc.Connection;
@@ -125,7 +126,71 @@ public class JoueurDAO {
 			}
 		}
 		return false;
-
 	}
+	
+	
+	public static Map<Integer, String> getJoueursRepondu(int idQuestion) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		String reqJoueurs = "SELECT * FROM joueur_reponse, joueur WHERE joueur_reponse.id_joueur=joueur.id_joueur AND id_question=" + idQuestion;
 
+		Statement st = null;
+		ResultSet res= null;
+		Map<Integer, String> joueurs = new HashMap<Integer, String>();
+
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqJoueurs);
+			
+			while (res.next()) {
+				joueurs.put(res.getInt("id_reponse"), res.getString("nom")); 
+			}
+		}
+		catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		}
+		finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+		
+		return joueurs;
+	}
+	
+	
+	public static Map<Integer, String> getJoueursRepondu5050(int idReponse1, int idReponse2) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		String reqJoueurs = "SELECT * FROM joueur_reponse, joueur WHERE joueur_reponse.id_joueur=joueur.id_joueur AND (id_reponse=" + idReponse1 + " OR id_reponse=" + idReponse2 + ")";
+
+		Statement st = null;
+		ResultSet res= null;
+		Map<Integer, String> joueurs = new HashMap<Integer, String>();
+
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqJoueurs);
+			
+			while (res.next()) {
+				joueurs.put(res.getInt("id_reponse"), res.getString("nom")); 
+			}
+		}
+		catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		}
+		finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+		
+		return joueurs;
+	}
 }

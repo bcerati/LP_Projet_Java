@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Ven 08 Mars 2013 à 15:14
+-- Généré le : Dim 10 Mars 2013 à 22:18
 -- Version du serveur: 5.1.66
--- Version de PHP: 5.3.3-7+squeeze14
+-- Version de PHP: 5.4.12-1~dotdeb.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -263,7 +263,7 @@ INSERT INTO `question` (`id_question`, `intitule`, `niveau`) VALUES
 (167, 'Parmis ces acteurs, lequel n''est pas français ?', 1),
 (168, 'Qui a gagné la coupe du monde de football en 1998 ?', 1),
 (169, 'Dans les bd d''Asterix et Obelix, comment s''appelle le chien des deux héros ?', 1),
-(170, 'Quel est le pays d''originir des bergers allemands ?', 1),
+(170, 'Quel est le pays d''origine des bergers allemands ?', 1),
 (171, 'Lequel de ces films ne traite pas de la Seconde Guerre Mondiale ?', 1),
 (172, 'Compléter le titre de la chanson de Johnny Halliday : "Allumer  ... ?', 1),
 (173, 'Quel est la race de Bill, le chien de Boule ?', 1),
@@ -1027,7 +1027,7 @@ CREATE TABLE IF NOT EXISTS `somme` (
   `id_somme` int(11) NOT NULL AUTO_INCREMENT,
   `valeur` int(11) NOT NULL,
   PRIMARY KEY (`id_somme`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
 
 --
 -- Contenu de la table `somme`
@@ -1048,7 +1048,8 @@ INSERT INTO `somme` (`id_somme`, `valeur`) VALUES
 (12, 100000),
 (13, 150000),
 (14, 300000),
-(15, 1000000);
+(15, 1000000),
+(16, 0);
 
 --
 -- Contraintes pour les tables exportées

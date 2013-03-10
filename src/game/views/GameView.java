@@ -8,6 +8,7 @@ import general_views.Panel;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class GameView extends JFrame {
 	private JPanel gamePanel;
 
 	// Boutons des jokers et du "quitter"
+	private JPanel panelJokers;
 	private Button btn5050;
 	private Button btnPublic;
 	private Button btnCoupDeFil;
@@ -54,6 +56,7 @@ public class GameView extends JFrame {
 	private AudioClip palier1Sound = null;
 	private AudioClip palier2Sound = null;
 	private AudioClip palier3Sound = null;
+	private AudioClip joker5050Sound = null;
 
 
 	public GameView() {
@@ -79,6 +82,7 @@ public class GameView extends JFrame {
 		palier1Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1500_sound.wav"));		
 		palier2Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/48000_sound.wav"));		
 		palier3Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1000000_sound.wav"));		
+		joker5050Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/5050_sound.wav"));		
 		selectionSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/selection_question.wav"));		
 	}
 
@@ -103,26 +107,37 @@ public class GameView extends JFrame {
 		panelTop.setPreferredSize(new Dimension(10 * caseWidht, 5 * caseHeight));
 
 		// Panel jokers (bouton quit + 4 jokers)
-		JPanel panelJokers = new JPanel(new GridLayout(5, 1));
+		panelJokers = new JPanel(new GridLayout(5, 1));
 		panelJokers.setPreferredSize(new Dimension(caseWidht, 5 * caseHeight));
 
 		Button btnQuit = new Button("quitter.png", caseWidht, caseHeight);
 		btnQuit.setActionCommand("quitWhithSaving");
 		btnQuit.addActionListener(controller);
+		btnQuit.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelJokers.add(btnQuit);
 
 		btn5050 = new Button("joker_5050.png", caseWidht, caseHeight);
+		btn5050.setActionCommand("joker5050");
+		btn5050.addActionListener(controller);
+		btn5050.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelJokers.add(btn5050);
 		
 		btnCoupDeFil = new Button("joker_appel.png", caseWidht, caseHeight);
+		btnCoupDeFil.setActionCommand("jokerCoupDeFil");
+		btnCoupDeFil.addActionListener(controller);
+		btnCoupDeFil.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelJokers.add(btnCoupDeFil);
 		
 		btnPublic = new Button("joker_public.png", caseWidht, caseHeight);
+		btnPublic.setActionCommand("jokerPublic");
+		btnPublic.addActionListener(controller);
+		btnPublic.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelJokers.add(btnPublic);
 
 		btnSwitch = new Button("joker_switch.png", caseWidht, caseHeight);
 		btnSwitch.setActionCommand("jokerSwitch");
 		btnSwitch.addActionListener(controller);
+		btnSwitch.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelJokers.add(btnSwitch);
 
 		// Panel du logo du jeu
@@ -157,21 +172,25 @@ public class GameView extends JFrame {
 		btnRespA = new Button("reponse_haut_gauche.png", 5 * caseWidht, caseHeight);
 		btnRespA.setActionCommand("A");
 		btnRespA.addActionListener(controller);
+		btnRespA.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelResponses.add(btnRespA);
 
 		btnRespB = new Button("reponse_haut_droit.png", 5 * caseWidht, caseHeight);
 		btnRespB.setActionCommand("B");
 		btnRespB.addActionListener(controller);
+		btnRespB.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelResponses.add(btnRespB);
 
 		btnRespC = new Button("reponse_bas_gauche.png", 5 * caseWidht, caseHeight);
 		btnRespC.setActionCommand("C");
 		btnRespC.addActionListener(controller);
+		btnRespC.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelResponses.add(btnRespC);
 
 		btnRespD = new Button("reponse_bas_droit.png", 5 * caseWidht, caseHeight);
 		btnRespD.setActionCommand("D");
 		btnRespD.addActionListener(controller);
+		btnRespD.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		panelResponses.add(btnRespD);
 
 		return panelResponses;
@@ -203,6 +222,7 @@ public class GameView extends JFrame {
 
 	public void setRepA(String a) {
 		btnRespA.removeAll();
+		btnRespA.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		a = "<span>A.</span> " + a;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+a+"</div></body></html>");  
 		btnRespA.add(lbl);
@@ -210,6 +230,7 @@ public class GameView extends JFrame {
 	
 	public void setRepA(String a, boolean select) {
 		btnRespA.removeAll();
+		btnRespA.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		a = "<span>A.</span> " + a;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+a+"</div></body></html>");  
 		btnRespA.add(lbl);
@@ -217,6 +238,7 @@ public class GameView extends JFrame {
 	
 	public void setRepB(String b) {
 		btnRespB.removeAll();
+		btnRespB.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		b = "<span>B.</span> " + b;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
 		btnRespB.add(lbl);
@@ -224,6 +246,7 @@ public class GameView extends JFrame {
 	
 	public void setRepB(String b, boolean select) {
 		btnRespB.removeAll();
+		btnRespB.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		b = "<span>B.</span> " + b;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
 		btnRespB.add(lbl);
@@ -231,6 +254,7 @@ public class GameView extends JFrame {
 	
 	public void setRepC(String c) {
 		btnRespC.removeAll();
+		btnRespC.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		c = "<span>C.</span> " + c;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+c+"</div></body></html>");  
 		btnRespC.add(lbl);
@@ -238,6 +262,7 @@ public class GameView extends JFrame {
 	
 	public void setRepC(String c, boolean select) {
 		btnRespC.removeAll();
+		btnRespC.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		c = "<span>C.</span> " + c;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+c+"</div></body></html>");  
 		btnRespC.add(lbl);
@@ -245,6 +270,7 @@ public class GameView extends JFrame {
 	
 	public void setRepD(String d) {
 		btnRespD.removeAll();
+		btnRespD.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		d = "<span>D.</span> " + d;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+d+"</div></body></html>");  
 		btnRespD.add(lbl);
@@ -252,6 +278,7 @@ public class GameView extends JFrame {
 
 	public void setRepD(String d, boolean select) {
 		btnRespD.removeAll();
+		btnRespD.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		d = "<span>D.</span> " + d;
 		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+d+"</div></body></html>");  
 		btnRespD.add(lbl);
@@ -312,6 +339,10 @@ public class GameView extends JFrame {
 	
 	public AudioClip getPalier3Sound() {
 		return palier3Sound;
+	}
+	
+	public AudioClip getJoker5050Sound() {
+		return joker5050Sound;
 	}
 	
 	public AudioClip getSelectionSound() {
@@ -463,6 +494,28 @@ public class GameView extends JFrame {
 	public int showAskFinalAnswer(String string) {
 		Dialog.confirmDialog(this, "Dernier mot ?", true, string);
 		return (Dialog.reponse) ? 1 : 0;
+	}
+	
+	public void useJoker5050() {
+		btn5050.removeActionListener(btn5050.getActionListeners()[0]);
+		panelJokers.remove(1);
+		btn5050 = new Button("joker_5050_utilise.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
+		panelJokers.add(btn5050, 1);
+		controller.getModel().setIs5050(true);
+	}
+	
+	public void useJokerPublic() {
+		btnPublic.removeActionListener(btnPublic.getActionListeners()[0]);
+		panelJokers.remove(3);
+		btnPublic = new Button("joker_public_utilise.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
+		panelJokers.add(btnPublic, 3);
+	}
+	
+	public void useJokerCoupDeFil() {
+		btnCoupDeFil.removeActionListener(btnCoupDeFil.getActionListeners()[0]);
+		panelJokers.remove(2);
+		btnCoupDeFil = new Button("joker_appel_utilise.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
+		panelJokers.add(btnCoupDeFil, 2);
 	}
 	
 	public void changeBtnSwitchToUse() {

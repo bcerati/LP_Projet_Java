@@ -23,10 +23,7 @@ public class GameModel {
 	
 	private int finalAnswer = -1;
 
-	private boolean isCoupDeFil;
 	private boolean is5050;
-	private boolean isAmis;
-	private boolean isSwitch;
 	
 	public static final int PALIER1 = 1500;
 	public static final int PALIER2 = 48000;
@@ -46,10 +43,7 @@ public class GameModel {
 		setCaseHeight(h);
 		questionNb = 1;
 		questionNbPyramid = 1;
-		isCoupDeFil = false;
 		is5050 = false;
-		isAmis = false;
-		isSwitch = false;
 	}
 
 	public GameModel() {
@@ -112,36 +106,12 @@ public class GameModel {
 		this.questionNbPyramid = questionNbPyramid;
 	}
 
-	public boolean isCoupDeFil() {
-		return isCoupDeFil;
-	}
-
-	public void setCoupDeFil(boolean isCoupDeFil) {
-		this.isCoupDeFil = isCoupDeFil;
-	}
-
 	public boolean isIs5050() {
 		return is5050;
 	}
 
 	public void setIs5050(boolean is5050) {
 		this.is5050 = is5050;
-	}
-
-	public boolean isAmis() {
-		return isAmis;
-	}
-
-	public void setAmis(boolean isAmis) {
-		this.isAmis = isAmis;
-	}
-
-	public boolean isSwitch() {
-		return isSwitch;
-	}
-
-	public void setSwitch(boolean isSwitch) {
-		this.isSwitch = isSwitch;
 	}
 
 	public int getFinalAnswer() {

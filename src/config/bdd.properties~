@@ -6,6 +6,6 @@
 <entry key="port">3306</entry>
 <entry key="adresse_ip">localhost</entry>
 <entry key="type_bdd">jdbc:mysql</entry>
-<entry key="pass">mQhGz51&2&$Pl</entry>
+<entry key="pass">mQhGz51&2$Pl</entry>
 <entry key="pilote_bdd">com.mysql.jdbc.Driver</entry>
 </properties>

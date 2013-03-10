@@ -282,7 +282,6 @@ public class Dialog {
 	     * Création des boutons
 	     */
 	    JButton button1 = new JButton("Ok");
-	    JButton button2 = new JButton("Annuler");
 	    
 	    
 	    /**
@@ -309,14 +308,6 @@ public class Dialog {
             }
         });	 
 	    
-	    button2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                choix = "";
-                dial.dispose();
-            }
-        });
-
-
 	    /**
 	     * On ajoute un keyListener au JTextField
 	     */
@@ -349,7 +340,6 @@ public class Dialog {
 	     * On ajoute les boutons au panel
 	     */
 	    panelButton.add(button1);
-	    panelButton.add(button2);
 	    panelText.add(label);
 	    panelTf.add(jtf);
 	    

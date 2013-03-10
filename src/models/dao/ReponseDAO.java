@@ -139,4 +139,137 @@ public class ReponseDAO {
 		return false;
 	}
 
+	
+	/**
+	 * Fonction permettant de trouver les 4 ids de réponses en fonction de la question posée
+	 * 
+	 * @param L'id_question de la question posée
+	 * @return La liste des id de réponses à la question
+	 */
+	public static ArrayList<Integer> findIdReponses(int id_question) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		String reqIdByNiveau = "SELECT id_reponse FROM reponse WHERE id_question=" + id_question;
+
+		Statement st = null;
+		ResultSet res= null;
+		ArrayList<Integer> listResponses = new ArrayList<Integer>();
+
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqIdByNiveau);
+			
+			while (res.next()) {
+				listResponses.add(res.getInt("id_reponse")); 
+			}
+		}
+		catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		}
+		finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close " + e.getMessage());
+			}
+		}
+		
+		return listResponses;
+	}
+	
+	
+	public static int findNbResponseByResponse(int id_question, int response_X, ArrayList<Integer> listResponses) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		int id_reponse_X = listResponses.get(response_X);
+		String reqIdByNiveau = "SELECT * FROM joueur_reponse WHERE id_reponse=" + id_reponse_X;
+
+		Statement st = null;
+		ResultSet res= null;
+		int nbResponse_X = 0;
+		
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqIdByNiveau);
+			
+			while (res.next()) {
+				nbResponse_X++;
+			}
+		}
+		catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		}
+		finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close " + e.getMessage());
+			}
+		}
+		
+		return nbResponse_X;
+	}
+	
+	
+	public static String findById(int idReponse) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		String reqQuestions = "SELECT intitule FROM reponse WHERE id_reponse=" + idReponse;
+
+		Statement st = null;
+		ResultSet res= null;
+		String reponse = "";
+
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqQuestions);
+			res.next();
+			reponse = res.getString("intitule");
+			
+		} catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		} finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close "+e.getMessage());
+			}
+		}
+		
+		return reponse;
+	}
+	
+	
+	public int findResponseByIdJoueur(int idJoueur) {
+		Connection co = (Connection)ConnexionMySQL.getInstance().getConnexion();
+		String reqIdByNiveau = "SELECT * FROM joueur_reponse WHERE id_joueur=" + idJoueur;
+
+		Statement st = null;
+		ResultSet res= null;
+		int idReponse = 0;
+		
+		try {
+			st = (Statement) co.createStatement();
+			res = st.executeQuery(reqIdByNiveau);
+			res.next();
+			idReponse = res.getInt("id_reponse");
+		}
+		catch (SQLException se) {
+			System.out.println("Erreur requête SQL : " + se.getMessage());
+		}
+		finally {
+			try {
+				res.close();
+				st.close();
+			}
+			catch (Exception e) {
+				System.out.println("charge : erreur close " + e.getMessage());
+			}
+		}
+		
+		return idReponse;
+	}
 }

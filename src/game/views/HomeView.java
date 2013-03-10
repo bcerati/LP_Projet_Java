@@ -7,6 +7,7 @@ import general_views.Panel;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.awt.Cursor;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -85,13 +86,15 @@ public class HomeView extends JFrame {
 		int caseWidth = controller.getModel().getCaseWidth(), caseHeight = controller.getModel().getCaseHeight();
 
 		rules = new Button("regles_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
+		rules.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		rules.setActionCommand("rules");
 
 		newGame = new Button("jouer_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
-
+		newGame.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		newGame.setActionCommand("newGame");
 
 		quit = new Button("quitter_home.png", 5 * caseWidth, (8 * caseHeight) / 3);
+		quit.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		quit.setActionCommand("quit");
 
 		options.add(rules);
@@ -101,7 +104,7 @@ public class HomeView extends JFrame {
 	}
 
 	public void showRules() {
-		Dialog.messageDialog(this, "Règles du jeu", true, "Ici les règles");
+		Dialog.messageDialog(this, "Règles du jeu", true, "<html><body><h1 style=\"text-align: center; margin-bottom: 30px;\">Règles du jeu</h1><div style=\"width: 400px; text-align: justify;\">Le jeu se déroule autour d'une série de questions dont les gains associés augmentent à chaque échelon, pour atteindre 1 000 000 € en fin de parcours. Je vous poserai, pour chaque échelon de la pyramide, une question et quatre réponses possibles. La difficulté des questions s'accroît avec la somme proposée. Une fois la question posée, le joueur a toutefois le choix d'abandonner ou non le jeu sans répondre et repartir avec les gains de l'échelon précédent.</div><div style=\"width: 400px; text-align: justify;\">Vous aurez quatres joker pour vous aider en cas de doute :</div><ul><li style=\"width: 400px; text-align: justify; padding-top:10px;\">le 50/50 : l'ordinateur élimine deux mauvaises réponses sur les quatre ; il a pour vocation de faciliter le choix.</li><li style=\"width: 400px; text-align: justify; padding-top:10px;\">l'appel à un ami : le candidat pose la question et propose les réponses à l'un de ses « amis » et ce dernier lui conseille, ou non, une des réponses proposées.</li><li style=\"width: 400px; text-align: justify; padding-top:10px;\">l'avis du public : les membres du public sont appelés à voter pour la réponse qui leur semble correcte. Les résultats sont ensuite représentés sous forme de pourcentages.</li><li style=\"width: 400px; text-align: justify; padding-top:10px;\">le switch : il permet à celui-ci d'abandonner la question en cours, et d'en passer à une autre de même valeur.</li></ul></body></html>");
 	}
 
 	public AudioClip getAudioClip() {
