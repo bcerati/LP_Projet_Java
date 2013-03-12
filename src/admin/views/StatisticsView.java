@@ -63,13 +63,13 @@ public class StatisticsView {
 		}
 
 		for(int i = 0 ; i < tString.size() ; i++) {
-			dataset.setValue(tDouble.get(i)*100/s, "Pourcentage", tString.get(i));
+			dataset.setValue(tDouble.get(i)*100/s, "Pourcentage", ((int)(100*tDouble.get(i)*100/s))/100. + "% : " + tString.get(i));
 		}
-	    
+		
 		JFreeChart chart = ChartFactory.createBarChart("Pourcentage", "Intitulé de la réponse", "Pourcentage", dataset, PlotOrientation.VERTICAL, false, true, false);
 
 		ChartFrame frame = new ChartFrame(intitule, chart);
-		frame.pack();
+		frame.setSize(1000, 600);
 		frame.setVisible(true);
 	}
 	

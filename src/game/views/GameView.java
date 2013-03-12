@@ -61,9 +61,10 @@ public class GameView extends JFrame {
 
 	public GameView() {
 		setTitle("Qui veut gagner des millions");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		controller = new GameController(this);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(controller.getWindowListener());
 
 		buildGUI();
 		setSounds();
@@ -224,7 +225,7 @@ public class GameView extends JFrame {
 		btnRespA.removeAll();
 		btnRespA.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		a = "<span>A.</span> " + a;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+a+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+a+"</div></body></html>");  
 		btnRespA.add(lbl);
 	}
 	
@@ -232,7 +233,7 @@ public class GameView extends JFrame {
 		btnRespA.removeAll();
 		btnRespA.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		a = "<span>A.</span> " + a;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+a+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+a+"</div></body></html>");  
 		btnRespA.add(lbl);
 	}
 	
@@ -240,7 +241,7 @@ public class GameView extends JFrame {
 		btnRespB.removeAll();
 		btnRespB.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		b = "<span>B.</span> " + b;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
 		btnRespB.add(lbl);
 	}
 	
@@ -248,7 +249,7 @@ public class GameView extends JFrame {
 		btnRespB.removeAll();
 		btnRespB.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		b = "<span>B.</span> " + b;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+b+"</div></body></html>");  
 		btnRespB.add(lbl);
 	}
 	
@@ -256,7 +257,7 @@ public class GameView extends JFrame {
 		btnRespC.removeAll();
 		btnRespC.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		c = "<span>C.</span> " + c;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+c+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+c+"</div></body></html>");  
 		btnRespC.add(lbl);
 	}
 	
@@ -264,7 +265,7 @@ public class GameView extends JFrame {
 		btnRespC.removeAll();
 		btnRespC.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		c = "<span>C.</span> " + c;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+c+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+c+"</div></body></html>");  
 		btnRespC.add(lbl);
 	}
 	
@@ -272,7 +273,7 @@ public class GameView extends JFrame {
 		btnRespD.removeAll();
 		btnRespD.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		d = "<span>D.</span> " + d;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+d+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: #F37800; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: white; font-family: ConeriaScript;}</style></head><body><div>"+d+"</div></body></html>");  
 		btnRespD.add(lbl);
 	}
 
@@ -280,7 +281,7 @@ public class GameView extends JFrame {
 		btnRespD.removeAll();
 		btnRespD.setCursor(Cursor.getPredefinedCursor(HAND_CURSOR));
 		d = "<span>D.</span> " + d;
-		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 40px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+d+"</div></body></html>");  
+		JLabel lbl = new JLabel("<html><head><style>div span { font-weight: bold; color: white; } div {font-size: 14px; width: 500px; margin-left: 40px; margin-right: 140px; padding-top: 5px; color: black; font-family: ConeriaScript;}</style></head><body><div>"+d+"</div></body></html>");  
 		btnRespD.add(lbl);
 	}
 	

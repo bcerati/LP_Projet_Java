@@ -10,9 +10,13 @@ import general_views.Dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import models.dao.JoueurDAO;
@@ -110,17 +114,21 @@ public class GameController implements ActionListener {
 		return somme_gagnee;
 	}
 	
+	public void quitWithSaving() {
+		int scoreFin = getFinalScore();
+		Dialog.confirmDialog(gameView, "Quitter le jeu", true, "Voulez-vous vraiment quitter avec la somme définitive de " + scoreFin + "€ ?");
+		if(Dialog.reponse) {
+			JoueurDAO.getInstance().addScore(model.getJoueur().getId(), scoreFin);
+			showHomePage();
+		}
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final String actionCommand = e.getActionCommand();
 		
 		if(actionCommand.equals("quitWhithSaving")) {
-			int scoreFin = getFinalScore();
-			Dialog.confirmDialog(gameView, "Quitter le jeu", true, "Voulez-vous vraiment quitter avec la somme définitive de " + scoreFin + "€ ?");
-			if(Dialog.reponse) {
-				JoueurDAO.getInstance().addScore(model.getJoueur().getId(), scoreFin);
-				showHomePage();
-			}
+			quitWithSaving();
 		}
 		
 		// On clique sur le joker 50/50
@@ -472,5 +480,15 @@ public class GameController implements ActionListener {
   	  				}
   	  			});
   	  		}}).start();
+	}
+	
+	public WindowListener getWindowListener() {
+		return new WindowAdapter() {
+
+	        @Override
+	        public void windowClosing(WindowEvent e) {
+	        	quitWithSaving();
+	        }
+	    };
 	}
 }

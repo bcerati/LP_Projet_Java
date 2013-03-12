@@ -30,11 +30,11 @@ public class GameModel {
 	public static final int PALIER3 = 1000000;
 
 	// Temps d'attente
-	public static final int SUSPENS = 3000; // 3000
+	public static final int SUSPENS = 500; // 3000
 	public static final int WRONG = 3000; // 3000
-	public static final int NEW_QUESTION = 3000; // 3000
-	public static final int CHANGE_LEVEL1 = 9000; // 9000
-	public static final int CHANGE_LEVEL2 = 5000; // 9000
+	public static final int NEW_QUESTION = 200; // 3000
+	public static final int CHANGE_LEVEL1 = 1000; // 9000
+	public static final int CHANGE_LEVEL2 = 1000; // 9000
 	public static final int CHANGE_LEVEL3 = 12000; // 12000
 
 	public GameModel(int w, int h) {
