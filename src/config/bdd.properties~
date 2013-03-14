@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-<entry key="bdd">qvgdm</entry>
-<entry key="login">root</entry>
+<entry key="bdd">nicomahou3</entry>
+<entry key="login">nicomahou3</entry>
 <entry key="port">3306</entry>
-<entry key="adresse_ip">localhost</entry>
+<entry key="adresse_ip">sql3.cluster1.easy-hebergement.net</entry>
 <entry key="type_bdd">jdbc:mysql</entry>
-<entry key="pass">mQhGz51&2$Pl</entry>
+<entry key="pass">B88lRULZ</entry>
 <entry key="pilote_bdd">com.mysql.jdbc.Driver</entry>
 </properties>

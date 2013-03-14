@@ -14,6 +14,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import javax.swing.JOptionPane;
+
 import utils.MesConstantes;
 
 
@@ -38,8 +40,10 @@ public class ConnexionMySQL {
 			this.demandePilote();
 			this.demandeConnexion();
 		} catch (ClassNotFoundException cnfe) {
+			JOptionPane.showMessageDialog(null, "Pb de driver : .jar dans le classpath", "title", JOptionPane.ERROR_MESSAGE);
 			System.out.println("Pb de driver : .jar dans le classpath ??? " + cnfe.getMessage());
 		} catch (SQLException se) {
+			JOptionPane.showMessageDialog(null, "Connexion impossible : pb de droits", "title", JOptionPane.ERROR_MESSAGE);
 			System.out.println("Connexion impossible : pb de droits ??? " + se.getMessage());
 		}
 	}
@@ -67,6 +71,7 @@ public class ConnexionMySQL {
 				this.demandeConnexion();
 			}
 		} catch (SQLException se) {
+			JOptionPane.showMessageDialog(null, se.getMessage(), "title", JOptionPane.ERROR_MESSAGE);
 			System.out.println("getConnexion " + se.getMessage());
 		}
 		return this.connexion;
@@ -81,6 +86,7 @@ public class ConnexionMySQL {
 		try {
 			this.connexion.close();
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Pb fermeture bdd", "title", JOptionPane.ERROR_MESSAGE);
 			System.out.println("Pb fermeture bdd " + e.getMessage());
 		}
 	}
@@ -100,18 +106,16 @@ public class ConnexionMySQL {
 	 */
 	private void demandeConnexion() throws SQLException {
 
-		
 		String url = this.proprietes.getProperty("type_bdd") + "://";
 		if (MesConstantes.isTunnel()) {
 			url += "localhost:8000" + "/" + this.proprietes.getProperty("bdd") ;
 		} else {
-			url += this.proprietes.getProperty("adresse_ip") + ":" + this.proprietes.getProperty("port") + "/"
+		url += this.proprietes.getProperty("adresse_ip") + ":" + this.proprietes.getProperty("port") + "/"
 					+ this.proprietes.getProperty("bdd");
 		}
 
 		String login = this.proprietes.getProperty("login");
 		String mdp = this.proprietes.getProperty("pass");
-
 		this.connexion = DriverManager.getConnection(url, login, mdp);
 	}
 
@@ -130,8 +134,9 @@ public class ConnexionMySQL {
 		try {
 			this.proprietes.loadFromXML(url.openStream());
 		} catch (IOException ioe) {
-			System.out
-					.println("Problème à la lecture du fichier de config bdd");
+			JOptionPane.showMessageDialog(null, "Problème à la lecture du fichier de config bdd", "title", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, ioe.getMessage(), "title", JOptionPane.ERROR_MESSAGE);
+			System.out.println("Problème à la lecture du fichier de config bdd");
 			System.out.println(ioe.getMessage());
 		}
 	}

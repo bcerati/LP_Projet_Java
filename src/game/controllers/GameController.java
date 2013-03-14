@@ -27,7 +27,7 @@ import models.metier.Question;
 import models.metier.Reponse;
 
 
-public class GameController implements ActionListener {
+public class GameController implements ActionListener, WindowListener {
 	private GameView gameView;
 	private GameModel model;
 	private JokerPublicView jokerPublicView;
@@ -256,7 +256,7 @@ public class GameController implements ActionListener {
 		gameView.useJoker5050();
 		gameView.repaint();
 		gameView.validate();
-		gameView.getJoker5050Sound().play();
+		//gameView.getJoker5050Sound().play();
 	}
 	
 	
@@ -482,13 +482,27 @@ public class GameController implements ActionListener {
   	  		}}).start();
 	}
 	
-	public WindowListener getWindowListener() {
-		return new WindowAdapter() {
-
-	        @Override
-	        public void windowClosing(WindowEvent e) {
-	        	quitWithSaving();
-	        }
-	    };
+	@Override
+	public void windowClosing(WindowEvent e) {
+		quitWithSaving();
 	}
+
+	@Override
+	public void windowActivated(WindowEvent e) { }
+
+	@Override
+	public void windowClosed(WindowEvent e) { }
+
+	@Override
+	public void windowDeactivated(WindowEvent e) { }
+
+	@Override
+	public void windowDeiconified(WindowEvent e) { }
+
+	@Override
+	public void windowIconified(WindowEvent e) { }
+
+	@Override
+	public void windowOpened(WindowEvent e) { }
+
 }

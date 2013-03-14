@@ -64,7 +64,7 @@ public class GameView extends JFrame {
 
 		controller = new GameController(this);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(controller.getWindowListener());
+		addWindowListener(controller);
 
 		buildGUI();
 		setSounds();
@@ -83,8 +83,8 @@ public class GameView extends JFrame {
 		palier1Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1500_sound.wav"));		
 		palier2Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/48000_sound.wav"));		
 		palier3Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/1000000_sound.wav"));		
-		joker5050Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/5050_sound.wav"));		
-		selectionSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/selection_question.wav"));		
+		//joker5050Sound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/sound_fity.wav"));		
+		selectionSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/selection_question.wav"));	
 	}
 
 	public void buildGUI() {
@@ -318,7 +318,6 @@ public class GameView extends JFrame {
 	}
 
 	public AudioClip getBackgroundSound() {
-		backgroundSound = Applet.newAudioClip(this.getClass().getClassLoader().getResource("sounds/background_sound.wav"));
 		return backgroundSound;
 	}
 
