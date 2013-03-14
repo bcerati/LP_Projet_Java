@@ -1,6 +1,5 @@
 package admin.models;
 
-import models.metier.Question;
 import models.metier.Reponse;
 
 import java.util.Vector;

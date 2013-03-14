@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
@@ -31,7 +28,6 @@ public class StatisticsView {
 	       String cle = (String) it.next();
 	       double valeur = model.getData().get(cle);
 	       double cle2 = (double)Integer.parseInt(cle);
-
 		    dataset.setValue((int)cle2 + "€ (" + ((int)(valeur*100))/100. + "%)", cle2);
 	    }
 	    
@@ -62,8 +58,8 @@ public class StatisticsView {
 			s += tDouble.get(i);
 		}
 
-		for(int i = 0 ; i < tString.size() ; i++) {
-			dataset.setValue(tDouble.get(i)*100/s, "Pourcentage", ((int)(100*tDouble.get(i)*100/s))/100. + "% : " + tString.get(i));
+		for(int i = tString.size()-1 ; i >=0  ; i--) {
+			dataset.setValue(tDouble.get(i)*100/s, "Pourcentage", ((int)(100*tDouble.get(i)*100/s))/100. + "% : " + (char)(68-i));
 		}
 		
 		JFreeChart chart = ChartFactory.createBarChart("Pourcentage", "Intitulé de la réponse", "Pourcentage", dataset, PlotOrientation.VERTICAL, false, true, false);

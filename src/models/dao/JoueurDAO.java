@@ -2,18 +2,14 @@ package models.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
 import models.metier.Joueur;
-import models.metier.Question;
-import models.metier.Reponse;
 
 public class JoueurDAO {
 

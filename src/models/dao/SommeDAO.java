@@ -3,15 +3,15 @@ package models.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
 import models.metier.Question;
-import models.metier.Reponse;
 
 public class SommeDAO {
 
@@ -72,14 +72,31 @@ public class SommeDAO {
 		Statement st = null;
 		ResultSet res= null;
 		HashMap<String, Double> m = new HashMap<String, Double>();
+		HashMap<String, Double> vrai = new HashMap<String, Double>();
+		ArrayList<Integer> aId = new ArrayList<Integer>();
 
 		try {
 			st = (Statement) co.createStatement();
 			res = st.executeQuery(reqPourcentages);
 
 			while(res.next()) {
-				m.put(res.getString(2), res.getDouble(3));
+				m.put(Integer.toString(res.getInt(1)), res.getDouble(3));
 			}
+			
+			Set<String> cles = m.keySet();
+			Iterator<String> it = cles.iterator();
+
+			while(it.hasNext()) {
+				String cle = (String) it.next();
+				aId.add(Integer.parseInt(cle));
+			}
+			Collections.sort(aId);
+			
+			for(int i = 0 ; i < 4 ; i++) {
+				vrai.put(Integer.toString(i), m.get(Integer.toString(aId.get(i))));
+			}
+
+			
 		} catch (SQLException se) {
 			System.out.println("Erreur requête SQL : " + se.getMessage());
 		} finally {
@@ -91,7 +108,7 @@ public class SommeDAO {
 				System.out.println("charge : erreur close "+e.getMessage());
 			}
 		}
-		return m;
+		return vrai;
 	}
 
 }

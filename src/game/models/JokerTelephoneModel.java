@@ -1,8 +1,5 @@
 package game.models;
 
-import java.util.ArrayList;
-
-
 public class JokerTelephoneModel {
 	private int caseWidth;
 	private int caseHeight;

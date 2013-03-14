@@ -3,7 +3,6 @@ package models.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import com.mysql.jdbc.Connection;

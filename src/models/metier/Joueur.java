@@ -11,8 +11,6 @@ public class Joueur {
      */
     private int id;
     private String nom;
-    private Score tab_score[];
-    private Question tab_question[];
     
     /*
      * Constructeur à 2 paramêtres

@@ -10,13 +10,11 @@ import general_views.Dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import models.dao.JoueurDAO;
@@ -169,8 +167,9 @@ public class GameController implements ActionListener, WindowListener {
 		
 		// On clique sur la réponse A
 		else if(actionCommand.equals("A") || actionCommand.equals("B") || actionCommand.equals("C") || actionCommand.equals("D")) {
-			
+
 			if(askFinalAnswer()) {
+				
 				// Fermeture des fenêtres des jokers
 				jokerPublicView.getFrame().dispose();
 				jokerTelephoneView.dispose();
@@ -209,7 +208,7 @@ public class GameController implements ActionListener, WindowListener {
 	      	  				}
 	      	  			});
 	      	  		}}).start();
-      	  }
+			}
 
 		}
 	}

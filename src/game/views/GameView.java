@@ -74,6 +74,8 @@ public class GameView extends JFrame {
 		this.setContentPane(gamePanel);		
 		this.pack();
 		this.setVisible(true);
+		setResponsesListeners(true, true, true, true);
+
 	}
 	
 	private void setSounds() {
@@ -367,6 +369,7 @@ public class GameView extends JFrame {
 		setRepC(q.getReponses().get(2).getIntitule());
 		setRepD(q.getReponses().get(3).getIntitule());
 		setResponsesListeners(true, true, true, true);
+
 	}
 
 	public void clearAnswerPanels() {
@@ -418,7 +421,6 @@ public class GameView extends JFrame {
 			panelResponses.add(btnRespD, 3);
 		}
 		this.validate();
-		setResponsesListeners(false, false, false, false);
 		return true;
 
 	}
