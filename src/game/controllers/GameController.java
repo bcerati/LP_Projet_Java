@@ -382,6 +382,8 @@ public class GameController implements ActionListener, WindowListener {
 		  	  			  	  					if(model.getQuestionNbPyramid() == 15) {
 		  	  			  	  						JoueurDAO.getInstance().addScore(model.getJoueur().getId(), 1000000);
 		  	  			  	  						gameView.getGoodSound().stop();
+			  	    	  							gameView.changePyramid(15);
+			  	    	  							gameView.validate();
 			  	  	  								gameView.getPalier3Sound().play();
 		  	  			  	  						Thread.sleep(model.CHANGE_LEVEL3);
 		  	  			  	  						Dialog.messageDialog(gameView, "", true, "Félicitation tu gagnes 1 000 000 d'euros !");

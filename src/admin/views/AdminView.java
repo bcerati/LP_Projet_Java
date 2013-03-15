@@ -69,7 +69,7 @@ public class AdminView extends JFrame implements AdminObservable {
 		JMenu menuStats = new JMenu("Statistiques");
 		menuFile.add(menuStats);
 
-		JMenuItem itemStatsSums = new JMenuItem("Candidats gagnats par somme");
+		JMenuItem itemStatsSums = new JMenuItem("Candidats gagnants par somme");
 		itemStatsSums.setActionCommand("statsSums");
 		itemStatsSums.addActionListener(controller);
 		menuStats.add(itemStatsSums);

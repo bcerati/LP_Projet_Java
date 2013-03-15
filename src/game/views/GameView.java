@@ -499,7 +499,9 @@ public class GameView extends JFrame {
 	}
 	
 	public void useJoker5050() {
-		btn5050.removeActionListener(btn5050.getActionListeners()[0]);
+		if(btn5050.getActionListeners().length > 0)
+			btn5050.removeActionListener(btn5050.getActionListeners()[0]);
+
 		panelJokers.remove(1);
 		btn5050 = new Button("joker_5050_utilise.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
 		panelJokers.add(btn5050, 1);
@@ -507,14 +509,18 @@ public class GameView extends JFrame {
 	}
 	
 	public void useJokerPublic() {
-		btnPublic.removeActionListener(btnPublic.getActionListeners()[0]);
+		if(btnPublic.getActionListeners().length > 0)
+			btnPublic.removeActionListener(btnPublic.getActionListeners()[0]);
+
 		panelJokers.remove(3);
 		btnPublic = new Button("joker_public_utilise.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
 		panelJokers.add(btnPublic, 3);
 	}
 	
 	public void useJokerCoupDeFil() {
-		btnCoupDeFil.removeActionListener(btnCoupDeFil.getActionListeners()[0]);
+		if(btnCoupDeFil.getActionListeners().length > 0)
+			btnCoupDeFil.removeActionListener(btnCoupDeFil.getActionListeners()[0]);
+
 		panelJokers.remove(2);
 		btnCoupDeFil = new Button("joker_appel_utilise.png", 5 * controller.getModel().getCaseWidth(), controller.getModel().getCaseHeight());
 		panelJokers.add(btnCoupDeFil, 2);
